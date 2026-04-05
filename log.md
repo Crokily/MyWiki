@@ -82,3 +82,20 @@
 - `coding-agent` 与 `agent-harness` 合并为一页（topic）
 - `openclaw` 作为真实项目建页（用户确认 2026 年爆火的 agent 项目）
 - 只建 `build-a-reasoning-model-from-scratch`一本书；另一本 *Build a LLM from Scratch* 仅在 [[sebastian-raschka]] 页提及不独立建页
+
+---
+
+## [2026-04-05] meta | raw/ 支持任意格式 + URL 来源
+
+放宽「什么可以进 `raw/`」的限制。
+
+**动机**：LLM 本身就是最强多格式提取器，不必强制 md。
+
+**改动**：
+- `AGENTS.md § 2`：raw/ 行改为“任意格式的原始素材”，文件名格式扩展为 `YYYY-MM-DD-slug.<ext>`
+- `AGENTS.md § 6`：ingest 第 1 步重写，明确支持三种输入态（本地文件 / URL / 粘贴文本），和对应的落盘策略
+- `taxonomy.md § 4`：file-naming 表更新，raw/ 允许任意扩展名；sources/ 仍强制 .md；全局唯一规则改为“去扩展名后唯一”
+
+**不影响的**：`sources/<basename>.md` 与 `raw/<basename>.<ext>` 仍保持 1:1 映射，`[[basename]]` 链接机制不变。
+
+**会同步到 public 分支**（纯配置改动）。
