@@ -54,6 +54,8 @@
   - 禁用变体：`AI`, `人工智能`, `artificial-intelligence`
 - `tech/llm` — 大语言模型
   - 禁用变体：`LLM`, `大模型`, `大语言模型`, `large-language-model`
+- `tech/agent` — AI 智能体、agent harness、agentic 系统（含 coding agent）
+  - 禁用变体：`agent`, `Agent`, `agentic`, `ai-agent`, `AI-Agent`, `智能体`, `agent-harness`
 
 #### `learning/` — 学习方法、学习资料、教育
 
