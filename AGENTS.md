@@ -20,7 +20,7 @@
 
 | 目录 | 内容 | 文件命名 |
 |---|---|---|
-| `raw/` | 不可变原始源（markdown） | `YYYY-MM-DD-slug.md` |
+| `raw/` | 不可变原始素材（**任意格式**：md / pdf / txt / docx / epub / 图片等；或 LLM 从 URL 抓取后落盘的 md） | `YYYY-MM-DD-slug.<ext>` |
 | `sources/` | 每个 raw 源的摘要 + 链接（1:1 映射，**同 basename**） | 同 raw |
 | `pages/` | 实体/概念/主题/工具/书/人物/笔记 | `english-slug.md` |
 | `maps/` | 高层 MOC、领域地图 | `english-slug.md` |
@@ -119,7 +119,21 @@ references:               # 回答时引用了哪些 pages
 
 ## 6. 工作流：Ingest（摄入新源）
 
-用户把一份 md 文件放到 `raw/` 并说"ingest 一下"。按此顺序执行：
+用户提供一份素材，可能是：
+
+- 一个本地文件（md / pdf / txt / docx / epub / 图片等，LLM 自己能读）
+- 一个 URL（网页 / Substack / 论文 / YouTube 等）
+- 一段直接粘贴的文本
+
+**第 0 步：把它落到 `raw/`**（文件名 `YYYY-MM-DD-slug.<ext>`，basename 去扩展名后全局唯一）：
+
+- 本地文件：直接拷进去，保留原扩展名
+- URL：用 agent-browser / gemini / 其它合适工具抓取正文，清洗后保存为 md；在文件顶部注明 `source_url` 和抓取方式
+- 粘贴文本：整理成 md 落盘
+
+> 注意：`sources/<basename>.md` 与 `raw/<basename>.<ext>` 仍保持 1:1 映射，两者 basename（去扩展名后）一致即可。sources/ 总是 md，raw/ 可是任意格式。
+
+**然后**按此顺序执行：
 
 1. **读 `taxonomy.md`**（强制，即使你刚读过）
 2. **读 `index.md`** 获取已有页面概览

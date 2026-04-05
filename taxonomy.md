@@ -54,6 +54,8 @@
   - 禁用变体：`AI`, `人工智能`, `artificial-intelligence`
 - `tech/llm` — 大语言模型
   - 禁用变体：`LLM`, `大模型`, `大语言模型`, `large-language-model`
+- `tech/agent` — AI 智能体、agent harness、agentic 系统（含 coding agent）
+  - 禁用变体：`agent`, `Agent`, `agentic`, `ai-agent`, `AI-Agent`, `智能体`, `agent-harness`
 
 #### `learning/` — 学习方法、学习资料、教育
 
@@ -98,13 +100,13 @@ aliases: [JavaScript, JS, js, JavaScript 语言, ECMAScript]
 
 | 目录 | 规则 | 例子 |
 |---|---|---|
-| `raw/` | `YYYY-MM-DD-slug.md` | `2026-04-05-atomic-habits-ch1.md` |
-| `sources/` | 同 `raw/`（basename 必须一致） | `2026-04-05-atomic-habits-ch1.md` |
+| `raw/` | `YYYY-MM-DD-slug.<ext>`（任意扩展名） | `2026-04-05-atomic-habits-ch1.md`, `2026-04-10-paper.pdf`, `2026-04-11-talk.webp` |
+| `sources/` | 同 `raw/`（basename 一致，**总是 .md**） | `2026-04-05-atomic-habits-ch1.md`（即使 raw 是 .pdf） |
 | `pages/` | `english-slug.md`，**不带日期** | `habit-formation.md` |
 | `maps/` | `english-slug.md`，**不带日期** | `tech-landscape.md` |
 | `queries/` | `YYYY-MM-DD-slug.md` | `2026-04-05-rust-vs-zig-memory.md` |
 
-**全局唯一**：任何两个文件的 basename（去掉 `.md`）不能相同，跨目录也不行。因为我们用 `[[slug]]` 短链接。
+**全局唯一**：任何两个文件的 basename（去掉扩展名）不能相同，跨目录也不行。因为我们用 `[[slug]]` 短链接。例如 `raw/2026-04-10-paper.pdf` 和 `sources/2026-04-10-paper.md` 是合法的 1:1 配对，但不能再有 `raw/2026-04-10-paper.docx`。
 
 Slug 本身的规则：
 - 英文小写
