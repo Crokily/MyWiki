@@ -6,6 +6,21 @@
 
 ---
 
+## 0. 扩展层（可选覆盖）
+
+本项目采用“**核心规则 + 可选扩展**”架构。`extensions/` 目录下的每个子目录是一个可选扩展；每个扩展用一份 `README.md` 告诉 AI agent：
+
+- 如何**检测**本扩展是否已启用（通常是某个二进制存在、某个配置文件存在）
+- 启用后它**覆盖或补充**本手册的哪些小节
+
+**会话开始时**（见 § 13）你必须 `ls extensions/ 2>/dev/null`，并逐个读取其 `README.md`。扩展的指示**优先于**本手册同一小节的默认描述——把扩展当作本手册的“可选覆盖层”。
+
+**已知扩展**（具体列表以 `extensions/README.md` 为准）：
+
+- `extensions/qmd/` — qmd 混合语义搜索（检测到后覆盖 § 10 的“搜索”子节）
+
+---
+
 ## 1. 三层架构
 
 | 层 | 位置 | 谁拥有 | 规则 |
@@ -203,20 +218,15 @@ references:               # 回答时引用了哪些 pages
 
 ## 10. 工具
 
-### 搜索
-
-```bash
-qmd query "自然语言问题"        # 混合搜索 + 重排（首选）
-qmd search "精确短语" -c pages # 按 collection 限定
-qmd get "pages/rust.md" --full # 读文件（带元信息）
-```
-
-qmd 未初始化时退回：
+### 搜索（默认：无扩展）
 
 ```bash
 rg -l "pattern" pages sources maps queries
 rg "pattern" -C 2 pages/
+fd -e md . pages sources maps queries
 ```
+
+> **扩展覆盖**：如果 `extensions/qmd/` 已启用（见 § 0），请按 `extensions/qmd/README.md` 的指引，把本小节替换为基于 `qmd query` / `qmd search` / `qmd get` 的工作流——qmd 负责语义/主题搜索，rg/fd 仍作为精确字符串匹配的补充。
 
 ### 扫描 frontmatter
 
@@ -269,5 +279,6 @@ rg "^  - " pages/ sources/ -A 0 | sort -u
 
 1. 读 `AGENTS.md`（本文件）
 2. 读 `taxonomy.md`
-3. `grep "^## \[" log.md | tail -10` 看最近动向
-4. 根据用户意图选择工作流（ingest / query / lint / 其他）
+3. **加载扩展**：`ls extensions/ 2>/dev/null`，对每个子目录读其 `README.md`，按其指引判定启用状态并应用对本手册的覆盖（见 § 0）
+4. `grep "^## \[" log.md | tail -10` 看最近动向
+5. 根据用户意图选择工作流（ingest / query / lint / 其他）

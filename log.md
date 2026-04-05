@@ -99,3 +99,33 @@
 **不影响的**：`sources/<basename>.md` 与 `raw/<basename>.<ext>` 仍保持 1:1 映射，`[[basename]]` 链接机制不变。
 
 **会同步到 public 分支**（纯配置改动）。
+
+---
+
+## [2026-04-05] meta | 引入 extensions/ 机制（qmd 作为首个扩展）
+
+把项目从“qmd 内置”重构为“核心规则 + 可选扩展”架构，qmd 降级为首个可选扩展。
+
+**新结构**：
+```
+extensions/
+├── README.md              # 扩展索引，给 AI agent 读（加载协议 + 未来方向）
+└── qmd/
+    ├── README.md          # qmd 扩展的启用引导：检测方法 + 对 AGENTS.md 的覆盖
+    ├── qmd.yml            # canonical 配置
+    └── init.sh            # 建符号链接 + 注册 context + qmd embed
+```
+
+**文件搬家**：
+- `qmd.yml` (项目根) → `extensions/qmd/qmd.yml`；项目根改为符号链接指向后者
+- `scripts/qmd-init.sh` → `extensions/qmd/init.sh`（路径 `cd` 相应修正）
+- `scripts/` 空目录删除
+
+**AGENTS.md 改动**：
+- 新增 `§ 0 扩展层`：明确“扩展读 README 覆盖手册”协议
+- `§ 10 搜索`：**默认反转**——rg/fd 为默认，qmd 变为“扩展覆盖”
+- `§ 13 checklist`：插入新步骤“加载扩展”（位于读 taxonomy 和 读 log 之间）
+
+**效果验证**：本次 commit 后，AI agent 进入项目 → 读 AGENTS.md § 0 → ls extensions/ → 读 qmd/README.md → 检测到 qmd 已装且 context 存在 → 采用 qmd 搜索工作流。用户体验无感。
+
+**public 分支**：本次改动属于“非文档的框架配置”，将 cherry-pick 到 public。
