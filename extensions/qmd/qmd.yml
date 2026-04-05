@@ -1,0 +1,28 @@
+# QMD configuration for MyWiki
+# Docs: https://github.com/tobi/qmd
+#
+# This is the canonical config for the qmd extension. The project root has
+# a symlink `qmd.yml` -> `extensions/qmd/qmd.yml` so qmd finds it via its
+# default lookup at CWD.
+#
+# To (re)initialize qmd after cloning or heavy changes:
+#   bash extensions/qmd/init.sh
+
+collections:
+  pages:
+    path: ./pages
+    pattern: '**/*.md'
+  sources:
+    path: ./sources
+    pattern: '**/*.md'
+  maps:
+    path: ./maps
+    pattern: '**/*.md'
+  queries:
+    path: ./queries
+    pattern: '**/*.md'
+  raw:
+    path: ./raw
+    pattern: '**/*.md'
+    # Note: only indexes md files in raw/. Non-md raws (pdf, docx, images,
+    # etc.) are accessed via their 1:1 sources/<basename>.md summary instead.

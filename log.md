@@ -53,3 +53,33 @@
 - `taxonomy.md § 4`：file-naming 表更新，raw/ 允许任意扩展名；sources/ 仍强制 .md；全局唯一规则改为"去扩展名后唯一"
 
 **不影响的**：`sources/<basename>.md` 与 `raw/<basename>.<ext>` 仍保持 1:1 映射，`[[basename]]` 链接机制不变。
+
+---
+
+## [2026-04-05] meta | 引入 extensions/ 机制（qmd 作为首个扩展）（synced from main 0792921）
+
+把项目从“qmd 内置”重构为“核心规则 + 可选扩展”架构，qmd 降级为首个可选扩展。
+
+**新结构**：
+```
+extensions/
+├── README.md              # 扩展索引，给 AI agent 读（加载协议 + 未来方向）
+└── qmd/
+    ├── README.md          # qmd 扩展的启用引导：检测方法 + 对 AGENTS.md 的覆盖
+    ├── qmd.yml            # canonical 配置
+    └── init.sh            # 建符号链接 + 注册 context + qmd embed
+```
+
+**文件搬家**：
+- `qmd.yml` (项目根) → `extensions/qmd/qmd.yml`；项目根改为符号链接指向后者
+- `scripts/qmd-init.sh` → `extensions/qmd/init.sh`
+- `scripts/` 空目录删除
+
+**AGENTS.md 改动**：
+- 新增 `§ 0 扩展层`：明确“extensions/*/README.md 覆盖本手册对应小节”协议
+- `§ 10 搜索`：**默认反转**——rg/fd 为默认，qmd 变为“扩展覆盖”
+- `§ 13 checklist`：插入新步骤“加载扩展”
+
+**效果**：AI agent 进入项目 → 读 AGENTS.md § 0 → ls extensions/ → 读 qmd/README.md → 检测到 qmd 已装 → 采用 qmd 搜索工作流。未装 qmd 的用户自动退回 rg/grep。
+
+**未来方向**（非承诺）：web-viewer / discord-bot / embedding-skill 等扩展均可遵循同一协议（放个目录 + 写个 README），零代码。
