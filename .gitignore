@@ -1,0 +1,27 @@
+# Obsidian vault config (Option C: per-machine, not tracked)
+.obsidian/
+
+# qmd local index database (regenerated per-clone via ./scripts/qmd-init.sh)
+*.sqlite
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
+.qmd/
+qmd.db
+qmd-index/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor swap / backup
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Node (in case any tooling lands here)
+node_modules/
+npm-debug.log*

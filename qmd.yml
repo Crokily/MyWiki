@@ -1,0 +1,25 @@
+# QMD configuration for MyWiki
+# Docs: https://github.com/tobi/qmd
+#
+# Five collections, one per wiki layer. raw/ is included as a last-resort
+# fallback when sources/ summaries are insufficient.
+#
+# To (re)build the index after cloning or heavy changes:
+#   ./scripts/qmd-init.sh
+
+collections:
+  pages:
+    path: ./pages
+    pattern: '**/*.md'
+  sources:
+    path: ./sources
+    pattern: '**/*.md'
+  maps:
+    path: ./maps
+    pattern: '**/*.md'
+  queries:
+    path: ./queries
+    pattern: '**/*.md'
+  raw:
+    path: ./raw
+    pattern: '**/*.md'
