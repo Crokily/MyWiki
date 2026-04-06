@@ -16,7 +16,7 @@
 - **夹带大量噪音**（sidebar、footer、nav、广告、cookie banner）
 - **浪费 token**（噪音可占原始 HTML 30-60%）
 
-本扩展组合 [defuddle](https://github.com/kepano/defuddle)（内容提取）和 agent-browser（交互式页面获取），为 agent 提供完整的网页阅读能力：
+本扩展以 [defuddle](https://github.com/kepano/defuddle)（内容提取）为首选，必要时再配合 agent-browser（交互式页面获取），为 agent 提供完整的网页阅读能力：
 
 - 保留正文图片（`![alt](url)` 形式）
 - 去除非正文噪音
@@ -46,12 +46,12 @@
 
 当用户提供 URL 作为源时，按以下优先级依次尝试：
 
-#### 路径 A：curl + defuddle（首选，最快最省 token）
+#### 路径 A：defuddle 直连 URL（首选，最快最省 token）
 
 适用：绝大多数博客、新闻、文档、论文页面（服务端渲染、无需交互）。
 
 ```bash
-curl -sL "$URL" | npx defuddle --markdown --json
+npx defuddle parse "$URL" --markdown --json
 ```
 
 - `--markdown`：输出 Markdown 格式正文
@@ -93,7 +93,7 @@ npx defuddle /tmp/page.html --markdown --json
 **Source**: {url}
 **Author**: {author}
 **Published**: {date}
-**Retrieved**: {today's date} (via {curl+defuddle | agent-browser+defuddle | agent-browser text})
+**Retrieved**: {today's date} (via {defuddle | agent-browser+defuddle | agent-browser text})
 
 ---
 
@@ -136,13 +136,13 @@ npm install -g @anthropic-ai/agent-browser
 本扩展把 URL 抓取拆成**两个独立阶段**：
 
 ```
-获取 HTML（可互换）          提取正文（统一）
-┌─────────────────┐        ┌──────────────┐
-│ curl（简单页面）    │──HTML──▶│              │
-└─────────────────┘        │   defuddle   │──▶ clean markdown → raw/
-┌─────────────────┐        │              │
-│ agent-browser    │──HTML──▶│              │
-│（弹窗/登录/SPA）   │        └──────────────┘
+URL（直连）                  提取正文（统一）
+┌─────────────────┐         ┌────────────────┐
+│ defuddle        │────────▶│ clean markdown │──▶ raw/
+└─────────────────┘         └────────────────┘
+┌─────────────────┐
+│ agent-browser    │──HTML──▶ defuddle ─▶ clean markdown ─▶ raw/
+│（弹窗/登录/SPA）   │
 └─────────────────┘
 ```
 

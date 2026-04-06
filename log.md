@@ -83,3 +83,15 @@ extensions/
 **效果**：AI agent 进入项目 → 读 AGENTS.md § 0 → ls extensions/ → 读 qmd/README.md → 检测到 qmd 已装 → 采用 qmd 搜索工作流。未装 qmd 的用户自动退回 rg/grep。
 
 **未来方向**（非承诺）：web-viewer / discord-bot / embedding-skill 等扩展均可遵循同一协议（放个目录 + 写个 README），零代码。
+
+---
+
+## [2026-04-06] meta | web-reader 改为 defuddle 直连（synced from main 88d7613）
+
+将 `extensions/web-reader/README.md` 的 URL 抓取优先级从 `curl + defuddle` 调整为：
+
+1. `defuddle` 直连 URL
+2. `agent-browser + defuddle`
+3. `agent-browser` 纯文本 fallback
+
+同时同步更新了 raw 头部中的 `Retrieved` 说明与设计示意图。
