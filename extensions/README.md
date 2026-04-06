@@ -25,6 +25,7 @@ AI agent 进入本项目时（见 `AGENTS.md § 0` 与 `§ 13` 的首次会话 c
 | 扩展 | 作用 | 覆盖的 AGENTS.md 小节 |
 |---|---|---|
 | [`qmd/`](./qmd/README.md) | 基于 qmd 的混合语义搜索（替代 rg/grep 作为首选） | § 10 "搜索" |
+| [`web-reader/`](./web-reader/README.md) | 网页内容提取（defuddle + agent-browser：保留图片、去噪、提取元数据） | § 6 第 0 步 "URL 抓取" |
 
 ---
 
