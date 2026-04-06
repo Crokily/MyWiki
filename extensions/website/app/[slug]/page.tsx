@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { BackLinks } from "@/components/BackLinks";
 import { PageMeta } from "@/components/PageMeta";
-import { getBacklinks, getPageBySlug, getAllPages, formatDate, tagToHref } from "@/lib/content";
+import { getBacklinks, getPageBySlug, getAllPages } from "@/lib/content";
 import { renderMarkdown } from "@/lib/markdown";
 
 interface WikiPageProps {
@@ -47,42 +46,22 @@ export default async function WikiPage({ params }: WikiPageProps) {
 
   const html = await renderMarkdown(page.body);
   const backlinks = getBacklinks(page.slug);
-  const classification = page.frontmatter.type || page.frontmatter.kind || page.directory;
-  const date = formatDate(page.sortDate);
 
   return (
     <>
-      {/* Title + inline metadata */}
-      <header className="space-y-3">
-        <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">{page.title}</h1>
-
-        <div className="flex flex-wrap items-center gap-2 text-sm">
-          <span className="rounded-md bg-[color:var(--accent-soft)] px-2 py-0.5 text-xs font-medium text-[color:var(--accent)]">
-            {classification}
-          </span>
-          {page.tags.map((tag) => (
-            <Link
-              key={tag}
-              href={tagToHref(tag)}
-              className="tag-chip rounded-md px-2 py-0.5 text-xs transition"
-            >
-              {tag}
-            </Link>
-          ))}
-          {date ? (
-            <span className="text-xs text-[color:var(--muted)]">{date}</span>
-          ) : null}
-        </div>
-
-        <PageMeta page={page} />
+      <header className="surface rounded-[2rem] p-8">
+        <p className="text-sm uppercase tracking-[0.25em] text-[color:var(--muted)]">/{page.slug}</p>
+        <h1 className="mt-4 font-serif text-4xl leading-tight md:text-5xl">{page.title}</h1>
       </header>
 
-      {/* Content */}
-      <article className="surface rounded-lg p-5 md:p-8">
-        <div className="prose prose-base dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: html }} />
+      <PageMeta page={page} />
+
+      <article className="surface rounded-[2rem] p-6 md:p-8">
+        <div className="prose prose-lg dark:prose-invert" dangerouslySetInnerHTML={{ __html: html }} />
       </article>
 
       <BackLinks pages={backlinks} />
     </>
   );
 }
+

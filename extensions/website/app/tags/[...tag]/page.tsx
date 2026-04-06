@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { formatDate, getAllTags, getPagesByTag } from "@/lib/content";
+import { getAllTags, getPagesByTag } from "@/lib/content";
 
 interface TagPageProps {
   params: Promise<{
@@ -39,35 +39,33 @@ export default async function TagPage({ params }: TagPageProps) {
 
   return (
     <>
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">#{fullTag}</h1>
-        <p className="mt-1 text-sm text-[color:var(--muted)]">{pages.length} pages</p>
-      </div>
+      <section className="surface rounded-[2rem] p-8">
+        <p className="text-sm uppercase tracking-[0.25em] text-[color:var(--muted)]">Tag Archive</p>
+        <h1 className="mt-4 font-serif text-4xl leading-tight md:text-5xl">#{fullTag}</h1>
+        <p className="mt-4 text-[color:var(--muted)]">{pages.length} pages reference this tag.</p>
+      </section>
 
-      <div className="space-y-2">
-        {pages.map((page) => (
-          <Link
-            key={page.slug}
-            href={page.href}
-            className="surface flex items-start gap-4 rounded-lg p-4 transition-colors hover:border-[color:var(--accent)]"
-          >
-            <div className="min-w-0 flex-1">
-              <div className="flex flex-wrap items-center gap-2">
-                <h2 className="font-medium">{page.title}</h2>
-                <span className="rounded-md bg-[color:var(--accent-soft)] px-2 py-0.5 text-xs font-medium text-[color:var(--accent)]">
+      <section className="surface rounded-[1.75rem] p-6">
+        <div className="grid gap-4">
+          {pages.map((page) => (
+            <Link
+              key={page.slug}
+              href={page.href}
+              className="rounded-[1.4rem] border border-[color:var(--border)] bg-white/30 p-5 transition hover:-translate-y-0.5 hover:border-[color:var(--accent)] dark:bg-black/10"
+            >
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="rounded-full bg-[color:var(--accent-soft)] px-2.5 py-1 text-xs font-medium text-[color:var(--accent)]">
                   {page.frontmatter.type || page.frontmatter.kind || page.directory}
                 </span>
+                <span className="text-xs uppercase tracking-[0.16em] text-[color:var(--muted)]">{page.directory}</span>
               </div>
-              {page.excerpt ? (
-                <p className="mt-1 line-clamp-1 text-sm text-[color:var(--muted)]">{page.excerpt}</p>
-              ) : null}
-            </div>
-            <span className="shrink-0 text-xs text-[color:var(--muted)] pt-1">
-              {formatDate(page.sortDate) ?? ""}
-            </span>
-          </Link>
-        ))}
-      </div>
+              <h2 className="mt-3 font-serif text-2xl leading-snug">{page.title}</h2>
+              <p className="mt-2 text-sm text-[color:var(--muted)]">{page.excerpt}</p>
+            </Link>
+          ))}
+        </div>
+      </section>
     </>
   );
 }
+
