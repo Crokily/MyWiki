@@ -18,6 +18,7 @@
 **已知扩展**（具体列表以 `extensions/README.md` 为准）：
 
 - `extensions/qmd/` — qmd 混合语义搜索（检测到后覆盖 § 10 的“搜索”子节）
+- `extensions/web-reader/` — 网页内容提取：defuddle + agent-browser（检测到后覆盖 § 6 第 0 步的 URL 抓取方式）
 
 ---
 
