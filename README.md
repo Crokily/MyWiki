@@ -1,108 +1,103 @@
 # MyWiki
 
-一个由 LLM Agent 增量维护的个人知识 wiki。
+**[English](./README.md)** | [中文](./README_ZH.md)
 
-设计思想来自 [`llm-wiki.md`](./llm-wiki.md)：不是 RAG，而是把知识**编译**进一个持续演化的 markdown 知识库，交叉引用、综合、矛盾检查都预先做好，而不是每次查询时重新发现。
+A personal knowledge base incrementally built and maintained by LLM agents.
 
----
-
-## 这不是什么
-
-- ❌ 不是聊天历史的堆积
-- ❌ 不是原始文件的 RAG 检索
-- ❌ 不是手工维护的 wiki
-
-## 这是什么
-
-- ✅ 一个由 LLM 写、人类读的活的知识库
-- ✅ 人类负责策划源、提问、判断；LLM 负责摘要、链接、维护
-- ✅ 结构为：`raw/`（原始源）→ `sources/`（摘要）→ `pages/`（综合的实体/概念/主题）→ `maps/` & `queries/`（高层综合和探索）
+The design is described in [`llm-wiki.md`](./llm-wiki.md): instead of RAG, knowledge is **compiled** into a continuously evolving markdown wiki. Cross-referencing, synthesis, and contradiction checking are done upfront, not re-derived on every query.
 
 ---
 
-## 首次使用
+## Quick start
 
-```bash
-# 1. clone
-git clone https://github.com/<you>/MyWiki.git
-cd MyWiki
+1. Fork this repository and clone it locally
+2. Open the project with any AI coding agent (Claude Code, Codex, etc.)
+3. Drop any article or document into the conversation and tell the agent to ingest it
+4. Enjoy. The agent reads `AGENTS.md`, understands the wiki structure, and handles everything: summarizing, cross-referencing, filing, and indexing
 
-# 2. 装 qmd（本地搜索引擎，给 LLM agent 用）
-npm install -g @tobilu/qmd
-# 或 bun install -g @tobilu/qmd
+You can then enable extensions as needed:
+- **web-reader** (strongly recommended): lets the agent fetch articles directly from URLs. Just tell your agent "enable the web-reader extension"
+- **qmd**: semantic search across your wiki. Best enabled once you have many pages. Tell your agent "enable the qmd extension"
+- **website**: generates a static site from your wiki. Useful if you don't use Obsidian for browsing. Tell your agent "enable the website extension"
 
-# 3. 初始化 qmd 索引（会下载嵌入模型，首次较慢）
-./scripts/qmd-init.sh
-
-# 4. 用 Obsidian 打开 MyWiki/ 目录作为 vault
-#    （Obsidian 配置不入 git，各台电脑独立）
-
-# 5. 启动 LLM agent（Claude Code / Codex CLI / Pi），
-#    它会自动读 AGENTS.md 作为操作手册
-```
+Enabling any extension is as simple as telling your AI agent to do it.
 
 ---
 
-## 目录结构
+## What this is
+
+- A living knowledge base written by LLMs, read by humans
+- Humans curate sources, ask questions, make judgments; the LLM summarizes, links, and maintains
+- Structure: `raw/` (original sources) -> `sources/` (summaries) -> `pages/` (synthesized entities/concepts/topics) -> `maps/` & `queries/` (high-level synthesis and exploration)
+
+## What this is not
+
+- Not a chat history dump
+- Not RAG retrieval over raw files
+- Not a manually maintained wiki
+
+---
+
+## Directory structure
 
 ```
 MyWiki/
-├── AGENTS.md       LLM 操作手册（核心规则，精简，每次会话加载）
-├── taxonomy.md     受控词表（type / tags / aliases 规范）
-├── index.md        内容目录（LLM 维护）
-├── log.md          时间线（append-only）
-├── llm-wiki.md     设计思想原文
-├── README.md       本文件
-├── qmd.yml         qmd 搜索配置
+├── AGENTS.md        LLM operational manual (core rules, loaded every session)
+├── taxonomy.md      Controlled vocabulary (type / tags / aliases spec)
+├── index.md         Content directory (LLM-maintained)
+├── log.md           Timeline (append-only)
+├── llm-wiki.md      Design philosophy
+├── README.md        This file
 │
-├── workflows/      🔄 工作流文档（按需加载，不预读）
-│   ├── ingest.md   摄入新源
-│   ├── query.md    查询 wiki
-│   └── lint.md     健康检查
-├── extensions/     🔌 可选能力扩展（按需加载，不预读）
-│   ├── qmd/        混合语义搜索
-│   └── web-reader/ 网页内容提取
+├── workflows/       Workflow docs (loaded on demand)
+│   ├── ingest.md    Ingest new sources
+│   ├── query.md     Query the wiki
+│   └── lint.md      Health checks
+├── extensions/      Optional capability extensions (loaded on demand)
+│   ├── qmd/         Hybrid semantic search
+│   ├── web-reader/  Web content extraction
+│   └── website/     Static site generation
 │
-├── raw/            📥 不可变原始源
-├── sources/        📝 每源一页摘要（1:1 同 basename）
-├── pages/          📚 wiki 页面：实体/概念/主题/工具/书/人物/笔记
-├── maps/           🗺  高层 MOC / 领域地图
-└── queries/        🔍 回填的探索、对比、分析
+├── raw/             Immutable original sources
+├── sources/         Per-source summaries (1:1 with raw)
+├── pages/           Wiki pages: entity / concept / topic / tool / book / person / note
+├── maps/            High-level MOC / domain maps
+└── queries/         Backfilled explorations, comparisons, analyses
 ```
 
 ---
 
-## 如何使用（日常）
+## Daily usage
 
-### 加入一个新源
+### Ingesting a new source
 
-1. 把 md 文件放进 `raw/`，命名 `YYYY-MM-DD-title.md`
-2. 告诉 LLM agent："ingest `raw/2026-04-05-xxx.md`"
-3. agent 会先读源，和你讨论 takeaways，等你确认后再写 wiki
-4. 一次 ingest 可能触及 5-15 个 pages，你在 Obsidian 里实时看到更新
+1. Place a markdown file in `raw/`, named `YYYY-MM-DD-title.md`
+2. Tell the LLM agent: "ingest `raw/2026-04-05-xxx.md`"
+3. The agent reads the source, discusses takeaways with you, and writes to the wiki after your confirmation
+4. A single ingest may touch 5-15 pages; you see updates in real time in Obsidian
 
-### 查询
+### Querying
 
-1. 直接问 agent："对比一下 X 和 Y"、"我读过哪些讲 Z 的东西"
-2. agent 用 `qmd` 搜索，综合答案
-3. 如果是有价值的新综合，agent 会问你要不要回填到 `queries/`
+1. Ask the agent: "compare X and Y", "what have I read about Z"
+2. The agent searches the wiki, synthesizes an answer
+3. If the synthesis is valuable, the agent asks whether to backfill it to `queries/`
 
-### 定期维护
+### Periodic maintenance
 
-- `lint` —— 让 agent 做一次健康检查（术语漂移、孤儿页、断链等）
-- 直接改 `taxonomy.md` —— 如果你想重组分类
-- 直接改 `AGENTS.md` —— 如果你想调整工作流
-
----
-
-## 给 LLM Agent 的入口
-
-**只需读 [`AGENTS.md`](./AGENTS.md)**。它是唯一需要在会话开始时加载的文件。
-
-AGENTS.md 包含核心规则，并会在需要时指引你读取工作流文档（`workflows/`）和扩展文档（`extensions/`）。不要预读所有文件。
+- `lint`: have the agent run a health check (term drift, orphan pages, broken links, etc.)
+- Edit `taxonomy.md` directly to reorganize categories
+- Edit `AGENTS.md` directly to adjust workflows
 
 ---
 
-## License & 脱敏
+## For LLM agents
 
-本项目结构（AGENTS.md、taxonomy.md、qmd.yml、scripts/）设计为可脱敏开源：把 `raw/ sources/ pages/ maps/ queries/` 里的内容清空，就是一份可供他人直接使用的模板。
+**Read [`AGENTS.md`](./AGENTS.md) only.** It is the sole file required at session start.
+
+AGENTS.md contains core rules and directs you to workflow docs (`workflows/`) and extension docs (`extensions/`) as needed. Do not preload everything.
+
+---
+
+## License
+
+This project structure (AGENTS.md, taxonomy.md, workflows/, extensions/, llm-wiki.md) is designed to be open-sourced as a template: clear the content directories (`raw/` `sources/` `pages/` `maps/` `queries/`) and you have a ready-to-use framework for anyone.

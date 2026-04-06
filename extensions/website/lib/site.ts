@@ -1,8 +1,8 @@
 export const DIRECTORY_LABELS = {
-  pages: "文档",
-  sources: "来源",
-  maps: "地图",
-  queries: "问题",
+  pages: "Pages",
+  sources: "Sources",
+  maps: "Maps",
+  queries: "Queries",
 } as const;
 
 export function formatDate(date?: string) {
@@ -16,7 +16,7 @@ export function formatDate(date?: string) {
     return date;
   }
 
-  return new Intl.DateTimeFormat("zh-CN", {
+  return new Intl.DateTimeFormat("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",

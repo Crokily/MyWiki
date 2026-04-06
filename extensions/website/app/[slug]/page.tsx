@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { BackLinksSidebar } from "@/components/BackLinks";
 import { PageMetaSidebar } from "@/components/PageMeta";
 import { TableOfContents } from "@/components/TableOfContents";
-import { getBacklinks, getPageBySlug, getAllPages, tagToHref } from "@/lib/content";
+import { getBacklinks, getPageBySlug, getAllPages } from "@/lib/content";
 import { renderMarkdown, extractHeadings } from "@/lib/markdown";
 import { DIRECTORY_LABELS, formatDate } from "@/lib/site";
 
@@ -48,7 +48,7 @@ export default async function WikiPage({ params }: WikiPageProps) {
   const html = await renderMarkdown(page.body);
   const headings = extractHeadings(html);
   const backlinks = getBacklinks(page.slug);
-  const classification = page.frontmatter.type || page.frontmatter.kind || page.directory;
+  const { classification } = page;
   const primaryDate =
     page.frontmatter.updated ||
     page.frontmatter.created ||
@@ -62,7 +62,7 @@ export default async function WikiPage({ params }: WikiPageProps) {
         <header className="surface overflow-hidden rounded-[2.5rem] px-5 py-6 sm:px-7 sm:py-8">
           <div className="flex flex-wrap items-center gap-2 text-sm">
             <Link href="/" className="text-[color:var(--muted)] transition hover:text-[color:var(--accent-strong)]">
-              首页
+              Home
             </Link>
             <span className="text-[color:var(--muted)]">/</span>
             <span className="pill-chip pill-chip-primary text-xs">{classification}</span>

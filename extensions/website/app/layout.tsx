@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     default: "MyWiki",
     template: "%s | MyWiki",
   },
-  description: "由 LLM 增量维护的个人知识库",
+  description: "A personal knowledge base incrementally maintained by LLM agents",
 };
 
 export const viewport: Viewport = {
@@ -55,7 +55,7 @@ export default function RootLayout({
   }));
 
   return (
-    <html lang="zh-CN" className={`${bodyFont.variable} ${displayFont.variable} ${monoFont.variable}`}>
+    <html lang="en" className={`${bodyFont.variable} ${displayFont.variable} ${monoFont.variable}`}>
       <body>
         <div className="relative isolate min-h-screen px-4 py-4 sm:px-6">
           <SiteHeader entries={searchEntries} />

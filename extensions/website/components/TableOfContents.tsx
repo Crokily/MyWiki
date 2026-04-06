@@ -36,8 +36,8 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
   if (headings.length === 0) return null;
 
   return (
-    <nav aria-label="目录">
-      <p className="text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">目录</p>
+    <nav aria-label="Table of contents">
+      <p className="text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">Contents</p>
       <ul className="mt-3 space-y-1.5">
         {headings.map((heading) => {
           const isActive = activeId === heading.id;

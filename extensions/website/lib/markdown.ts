@@ -7,7 +7,7 @@ import rehypeSlug from "rehype-slug";
 import rehypeStringify from "rehype-stringify";
 
 import { getAllPages } from "@/lib/content";
-import { extractWikiLinksFromText } from "@/lib/wikilinks";
+import { INLINE_WIKILINK_PATTERN, extractWikiLinksFromText } from "@/lib/wikilinks";
 
 export interface TocHeading {
   id: string;
@@ -33,7 +33,7 @@ function textToNodes(value: string, resolveTitle: (slug: string) => string | und
   const nodes: MarkdownNode[] = [];
   let cursor = 0;
 
-  for (const match of value.matchAll(/\[\[([^[\]|]+)(?:\|([^[\]]+))?\]\]/g)) {
+  for (const match of value.matchAll(INLINE_WIKILINK_PATTERN)) {
     const start = match.index ?? 0;
     const end = start + match[0].length;
 

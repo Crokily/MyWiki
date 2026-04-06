@@ -1,70 +1,70 @@
-# Ingest — 摄入新源
+# Ingest
 
-> 确定用户要摄入新源后再读取本文档。
-
----
-
-## 前置读取
-
-1. [`taxonomy.md`](../taxonomy.md) — 获取可用的 type 和 tags
-2. [`index.md`](../index.md) — 已有页面概览
+> Read this document after confirming the user wants to ingest a new source.
 
 ---
 
-## 第 0 步：落盘到 `raw/`
+## Prerequisites
 
-文件名 `YYYY-MM-DD-slug.<ext>`，basename 去扩展名后全局唯一。
+1. [`taxonomy.md`](../taxonomy.md) -- get available types and tags
+2. [`index.md`](../index.md) -- overview of existing pages
 
-| 输入类型 | 操作 |
+---
+
+## Step 0: Save to `raw/`
+
+Filename `YYYY-MM-DD-slug.<ext>`, basename (without extension) must be globally unique.
+
+| Input type | Action |
 |---|---|
-| 本地文件 | 直接拷进 `raw/`，保留原扩展名 |
-| URL | 读 [`extensions/web-reader/README.md`](../extensions/web-reader/README.md) 获取抓取方法，保存为 md |
-| 粘贴文本 | 整理成 md 落盘 |
+| Local file | Copy directly into `raw/`, preserving the original extension |
+| URL | Read [`extensions/web-reader/README.md`](../extensions/web-reader/README.md) for extraction method, save as md |
+| Pasted text | Format as md and save |
 
-> `sources/<basename>.md` 与 `raw/<basename>.<ext>` 保持 1:1 映射，basename 一致即可。
+> `sources/<basename>.md` and `raw/<basename>.<ext>` maintain 1:1 mapping, matching basename is sufficient.
 
-## 第 1 步：读 raw 源全文
+## Step 1: Read the raw source in full
 
-通读整个 raw 文件，理解内容。
+Read through the entire raw file to understand the content.
 
-## 第 2 步：讨论 takeaways
+## Step 2: Discuss takeaways
 
-**关键步骤，不可跳过。**
+**Critical step, cannot be skipped.**
 
-列出 3-7 个关键点，问用户哪些值得强调、有没有遗漏。**等用户回复后再动笔**。
+List 3-7 key points. Ask the user which ones to emphasize and whether anything is missing. **Wait for the user to respond before writing.**
 
-## 第 3 步：写 `sources/`
+## Step 3: Write `sources/`
 
-写 `sources/<same-basename>.md`：结构化摘要 + `touches` 列出将触及的 pages。
+Write `sources/<same-basename>.md`: structured summary + `touches` listing the pages that will be affected.
 
-## 第 4 步：更新或新建 `pages/`
+## Step 4: Update or create `pages/`
 
-一次 ingest 可能触及 5-15 个页面：
-- **新页面**：按 taxonomy 选 `type` 和 `tags`
-- **已有页面**：追加新信息、插入引用、必要时修订旧说法
+A single ingest may touch 5-15 pages:
+- **New pages**: select `type` and `tags` from taxonomy
+- **Existing pages**: append new information, insert citations, revise outdated claims as needed
 
-## 第 5 步：双向链接维护
+## Step 5: Bidirectional link maintenance
 
-在被引用页面的 `sources` 字段加上本次 source 链接。
+Add the current source link to the `sources` field of referenced pages.
 
-## 第 6 步：tag/type 登记
+## Step 6: Tag/type registration
 
-若需要 taxonomy 中没有的 tag/type，**先停下**告知用户，确认后写入 `taxonomy.md`。
+If a tag/type not in taxonomy is needed, **stop** and inform the user. After confirmation, write to `taxonomy.md`.
 
-## 第 7 步：重新生成 `index.md`
+## Step 7: Regenerate `index.md`
 
-按 type 和 tag 分组。
+Group by type and tag.
 
-## 第 8 步：追加 `log.md`
+## Step 8: Append to `log.md`
 
-`## [YYYY-MM-DD] ingest | <title>` + 触及文件清单。
+`## [YYYY-MM-DD] ingest | <title>` + list of affected files.
 
-## 第 9 步：搜索索引
+## Step 9: Search index
 
-如果本次新建或修改了 ≥ 3 个文件，读 [`extensions/qmd/README.md`](../extensions/qmd/README.md) 检查是否需要更新搜索索引。
+If 3 or more files were created or modified, read [`extensions/qmd/README.md`](../extensions/qmd/README.md) to check whether the search index needs updating.
 
-## 第 10 步：Git commit
+## Step 10: Git commit
 
 `ingest: <short title>`
 
-一次 ingest = 一个 commit，不要拆。
+One ingest = one commit. Do not split.

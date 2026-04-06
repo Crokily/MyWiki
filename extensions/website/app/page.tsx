@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { EntryCard } from "@/components/EntryCard";
-import { getAllPages, getAllTags, getDirectoryCounts, getRecentPages, tagToHref } from "@/lib/content";
+import { getAllTags, getDirectoryCounts, getRecentPages, tagToHref } from "@/lib/content";
 import { DIRECTORY_LABELS } from "@/lib/site";
 
 export default function HomePage() {
@@ -13,7 +13,7 @@ export default function HomePage() {
     title: page.title,
     excerpt: page.excerpt,
     directory: page.directory,
-    classification: page.frontmatter.type || page.frontmatter.kind || page.directory,
+    classification: page.classification,
     sortDate: page.sortDate,
     tags: page.tags,
   }));
@@ -32,10 +32,10 @@ export default function HomePage() {
           <div className="pointer-events-none absolute bottom-0 right-0 h-56 w-56 rounded-[32%_68%_67%_33%_/_38%_35%_65%_62%] bg-[color:var(--accent-soft)] blur-3xl" />
           <div className="relative">
             <h1 className="max-w-3xl font-serif text-4xl leading-[1] tracking-[-0.05em] text-[color:var(--foreground)] sm:text-5xl md:text-6xl">
-              个人知识库
+              Knowledge Base
             </h1>
             <p className="mt-4 max-w-2xl text-base text-[color:var(--muted)] md:text-lg">
-              由 LLM 增量维护的 Markdown 知识库。涵盖 AI、编码智能体、推理模型等主题，所有内容交叉引用、持续演化。
+              A markdown knowledge base incrementally maintained by LLM agents. Cross-referenced, continuously evolving.
             </p>
           </div>
         </section>
@@ -43,8 +43,8 @@ export default function HomePage() {
         {/* Recent Entries */}
         <section>
           <div className="mb-4 flex items-end justify-between gap-4">
-            <h2 className="font-serif text-3xl tracking-[-0.03em]">最近更新</h2>
-            <span className="text-sm text-[color:var(--muted)]">{recentEntries.length} 条</span>
+            <h2 className="font-serif text-3xl tracking-[-0.03em]">Recent Updates</h2>
+            <span className="text-sm text-[color:var(--muted)]">{recentEntries.length} entries</span>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {recentEntries.map((page, index) => (
@@ -59,7 +59,7 @@ export default function HomePage() {
         <div className="sticky top-24 space-y-5">
           {/* Content Stats */}
           <section className="surface rounded-[2rem] px-4 py-5">
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">内容统计</p>
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">Content Stats</p>
             <div className="mt-4 space-y-3">
               {nonEmptyDirectories.map(([dir, label]) => (
                 <div key={dir} className="flex items-center justify-between gap-3">
@@ -69,9 +69,9 @@ export default function HomePage() {
               ))}
               <div className="border-t border-[color:var(--border)] pt-3">
                 <div className="flex items-center justify-between gap-3">
-                  <span className="text-sm font-medium text-[color:var(--foreground)]">总计</span>
+                  <span className="text-sm font-medium text-[color:var(--foreground)]">Total</span>
                   <span className="text-sm font-semibold text-[color:var(--foreground)]">
-                    {getAllPages().length}
+                    {Object.values(counts).reduce((a, b) => a + b, 0)}
                   </span>
                 </div>
               </div>
@@ -81,7 +81,7 @@ export default function HomePage() {
           {/* Tags */}
           {tags.length > 0 && (
             <section className="surface rounded-[2rem] px-4 py-5">
-              <p className="text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">主题标签</p>
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">Tags</p>
               <div className="mt-4 space-y-2">
                 {tags.map((tag) => (
                   <Link
@@ -103,7 +103,7 @@ export default function HomePage() {
       <div className="space-y-5 lg:hidden">
         {tags.length > 0 && (
           <section className="surface rounded-[2rem] px-5 py-5">
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">主题标签</p>
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">Tags</p>
             <div className="mt-4 flex flex-wrap gap-2">
               {tags.map((tag) => (
                 <Link

@@ -2,7 +2,6 @@ import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
 
-export { formatDate } from "@/lib/site";
 import { extractWikiLinksFromText } from "@/lib/wikilinks";
 
 export const CONTENT_DIRECTORIES = ["pages", "sources", "maps", "queries"] as const;
@@ -32,6 +31,7 @@ export interface WikiEntry {
   links: string[];
   frontmatter: WikiFrontmatter;
   sortDate?: string;
+  classification: string;
 }
 
 export interface TagGroup {
@@ -157,6 +157,7 @@ function loadEntries(): WikiEntry[] {
         links: Array.from(links),
         frontmatter,
         sortDate: getSortDate(frontmatter),
+        classification: frontmatter.type || frontmatter.kind || directory,
       });
     }
   }
@@ -190,7 +191,7 @@ export function getAllTags(): TagGroup[] {
   return Array.from(tagMap.entries())
     .map(([tag, pages]) => ({
       tag,
-      pages: pages.sort((left, right) => left.title.localeCompare(right.title, "zh-Hans-CN")),
+      pages: pages.sort((left, right) => left.title.localeCompare(right.title, "en")),
       count: pages.length,
       segments: tag.split("/"),
     }))
@@ -199,20 +200,20 @@ export function getAllTags(): TagGroup[] {
         return right.count - left.count;
       }
 
-      return left.tag.localeCompare(right.tag, "zh-Hans-CN");
+      return left.tag.localeCompare(right.tag, "en");
     });
 }
 
 export function getPagesByTag(tag: string): WikiEntry[] {
   return getAllPages()
     .filter((entry) => entry.tags.includes(tag))
-    .sort((left, right) => left.title.localeCompare(right.title, "zh-Hans-CN"));
+    .sort((left, right) => left.title.localeCompare(right.title, "en"));
 }
 
 export function getBacklinks(slug: string): WikiEntry[] {
   return getAllPages()
     .filter((entry) => entry.slug !== slug && entry.links.includes(slug))
-    .sort((left, right) => left.title.localeCompare(right.title, "zh-Hans-CN"));
+    .sort((left, right) => left.title.localeCompare(right.title, "en"));
 }
 
 export function getDirectoryCounts() {
@@ -237,20 +238,3 @@ export function tagToHref(tag: string) {
   return `/tags/${tag.split("/").map((segment) => encodeURIComponent(segment)).join("/")}`;
 }
 
-export function getRootTagGroups() {
-  const grouped = new Map<string, TagGroup[]>();
-
-  for (const tag of getAllTags()) {
-    const root = tag.segments[0];
-    const list = grouped.get(root) ?? [];
-    list.push(tag);
-    grouped.set(root, list);
-  }
-
-  return Array.from(grouped.entries())
-    .map(([root, tags]) => ({
-      root,
-      tags,
-    }))
-    .sort((left, right) => left.root.localeCompare(right.root, "zh-Hans-CN"));
-}

@@ -1,36 +1,36 @@
-# qmd — 混合语义搜索
+# qmd -- hybrid semantic search
 
-> 需要搜索 wiki 内容时读取本文件。自包含：检测 → 使用 → 回退。
-
----
-
-## 检测
-
-满足**全部**三项才可用：
-
-1. `command -v qmd` 有输出
-2. 项目根存在 `qmd.yml`
-3. `qmd context list` 返回非空列表
-
-**任一项不满足 → 跳到下方「回退」小节。**
+> Read this file when you need to search wiki content. Self-contained: detect, use, fallback.
 
 ---
 
-## 使用（qmd 可用时）
+## Detection
+
+All **three** conditions must be met:
+
+1. `command -v qmd` produces output
+2. `qmd.yml` exists at project root
+3. `qmd context list` returns a non-empty list
+
+**If any condition fails, skip to the "Fallback" section below.**
+
+---
+
+## Usage (when qmd is available)
 
 ```bash
-qmd query "自然语言问题"          # 混合搜索 + 重排，首选
-qmd search "精确短语" -c pages   # 按 collection 限定
-qmd get "pages/xxx.md" --full   # 读文件带元信息
+qmd query "natural language question"          # hybrid search + reranking, preferred
+qmd search "exact phrase" -c pages             # search within a specific collection
+qmd get "pages/xxx.md" --full                  # read a file with metadata
 ```
 
-可用 collections：`pages`、`sources`、`maps`、`queries`、`raw`。
+Available collections: `pages`, `sources`, `maps`, `queries`, `raw`.
 
-`rg` / `fd` 仍作为**精确字符串**匹配的补充。
+`rg` / `fd` remain useful as supplements for **exact string** matching.
 
-### 索引更新
+### Index update
 
-新建或修改 ≥ 3 个文件后，在 git commit 前执行：
+After creating or modifying 3 or more files, run before git commit:
 
 ```bash
 qmd embed
@@ -38,7 +38,7 @@ qmd embed
 
 ---
 
-## 回退（qmd 不可用时）
+## Fallback (when qmd is unavailable)
 
 ```bash
 rg -l "pattern" pages sources maps queries
@@ -48,17 +48,17 @@ fd -e md . pages sources maps queries
 
 ---
 
-## 安装（给人类用户）
+## Installation (for human users)
 
 ```bash
 npm install -g @tobilu/qmd
 bash extensions/qmd/init.sh
 ```
 
-## 文件说明
+## Files
 
-| 文件 | 角色 |
+| File | Role |
 |---|---|
-| `README.md` | 本文件 |
-| `qmd.yml` | qmd 配置（项目根的 `qmd.yml` 是指向此文件的符号链接） |
-| `init.sh` | 一次性初始化脚本 |
+| `README.md` | This file |
+| `qmd.yml` | qmd configuration (the root `qmd.yml` is a symlink to this file) |
+| `init.sh` | One-time initialization script |

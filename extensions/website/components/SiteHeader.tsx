@@ -46,7 +46,7 @@ export function SiteHeader({ entries }: SiteHeaderProps) {
             }}
             onFocus={() => deferred && setOpen(true)}
             onBlur={() => setTimeout(() => setOpen(false), 200)}
-            placeholder="搜索条目..."
+            placeholder="Search entries..."
             className="h-10 w-full max-w-md rounded-full border border-[color:var(--border)] bg-[color:var(--surface-card)] px-4 text-sm text-[color:var(--foreground)] outline-none transition placeholder:text-[color:var(--muted)] focus-visible:ring-2 focus-visible:ring-[color:var(--accent-soft)]"
             type="search"
           />
@@ -70,7 +70,7 @@ export function SiteHeader({ entries }: SiteHeaderProps) {
             href="/"
             className="rounded-full border border-[color:var(--border)] bg-[color:var(--surface-card)] px-4 py-2 text-sm font-medium transition hover:border-[color:var(--accent)] hover:text-[color:var(--accent-strong)]"
           >
-            首页
+            Home
           </Link>
         </nav>
       </div>

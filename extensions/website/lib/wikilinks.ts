@@ -3,7 +3,7 @@ export interface WikiLinkMatch {
   text?: string;
 }
 
-const INLINE_WIKILINK_PATTERN = /\[\[([^[\]|]+)(?:\|([^[\]]+))?\]\]/g;
+export const INLINE_WIKILINK_PATTERN = /\[\[([^[\]|]+)(?:\|([^[\]]+))?\]\]/g;
 const FULL_WIKILINK_PATTERN = /^\[\[([^[\]|]+)(?:\|([^[\]]+))?\]\]$/;
 
 export function parseWikiLink(value: string): WikiLinkMatch | null {

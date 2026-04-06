@@ -1,18 +1,18 @@
-# Extensions — 可选能力
+# Extensions
 
-> **不要在会话开始时加载本文件或任何扩展文档。**
-> 工作流文档（`workflows/`）会在需要时指引你读取相关扩展。
+> **Do not load this file or any extension docs at session start.**
+> Workflow documents (`workflows/`) will direct you to the relevant extension when needed.
 
-每个扩展的 README.md 是**自包含**的：包含检测方法、使用方式、和回退方案。读它就够了，不需要交叉参考其他文档。
+Each extension README.md is **self-contained**: it includes detection, usage, and fallback instructions. Reading it alone is sufficient; no cross-referencing needed.
 
-## 当前扩展
+## Available extensions
 
-| 扩展 | 能力 | 何时读取 |
+| Extension | Capability | When to read |
 |---|---|---|
-| [`qmd/`](./qmd/README.md) | 混合语义搜索 | 需要搜索 wiki 内容时 |
-| [`web-reader/`](./web-reader/README.md) | 网页内容提取 | 从 URL 抓取内容时 |
-| [`website/`](./website/README.md) | 静态站点生成 | 需要将 wiki 部署为网站时 |
+| [`qmd/`](./qmd/README.md) | Hybrid semantic search | When searching wiki content |
+| [`web-reader/`](./web-reader/README.md) | Web content extraction | When fetching content from a URL |
+| [`website/`](./website/README.md) | Static site generation | When deploying the wiki as a website |
 
-## 新增扩展
+## Adding a new extension
 
-新建目录 + 写一份自包含 README.md（检测 → 使用 → 回退 → 安装）。
+Create a new directory + write a self-contained README.md (detect, use, fallback, install).

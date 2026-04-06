@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: TagPageProps): Promise<Metada
 
   return {
     title: `#${fullTag}`,
-    description: `标签 ${fullTag} 下的所有条目`,
+    description: `All entries tagged with ${fullTag}`,
   };
 }
 
@@ -45,7 +45,7 @@ export default async function TagPage({ params }: TagPageProps) {
     title: page.title,
     excerpt: page.excerpt,
     directory: page.directory,
-    classification: page.frontmatter.type || page.frontmatter.kind || page.directory,
+    classification: page.classification,
     sortDate: page.sortDate,
     tags: page.tags,
   }));
@@ -57,14 +57,14 @@ export default async function TagPage({ params }: TagPageProps) {
         <section className="surface overflow-hidden rounded-[2.5rem] px-5 py-6 sm:px-7 sm:py-8">
           <div className="flex flex-wrap items-center gap-2 text-sm">
             <Link href="/" className="text-[color:var(--muted)] transition hover:text-[color:var(--accent-strong)]">
-              首页
+              Home
             </Link>
             <span className="text-[color:var(--muted)]">/</span>
-            <span className="text-[color:var(--foreground)]">标签</span>
+            <span className="text-[color:var(--foreground)]">Tags</span>
           </div>
           <h1 className="mt-4 font-serif text-4xl leading-[0.95] tracking-[-0.05em] sm:text-5xl">#{fullTag}</h1>
           <p className="mt-4 max-w-2xl text-base text-[color:var(--muted)]">
-            共 {pages.length} 个条目命中此标签。
+            {pages.length} entries match this tag.
           </p>
         </section>
 
@@ -79,7 +79,7 @@ export default async function TagPage({ params }: TagPageProps) {
       <aside className="hidden lg:block">
         <div className="sticky top-24 space-y-5">
           <section className="surface rounded-[2rem] px-4 py-5">
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">所有标签</p>
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">All Tags</p>
             <div className="mt-4 space-y-2">
               {allTags.map((t) => (
                 <Link

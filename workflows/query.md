@@ -1,33 +1,33 @@
-# Query — 查询 wiki
+# Query
 
-> 确定用户在提问后再读取本文档。
+> Read this document after confirming the user is asking a question.
 
 ---
 
-## 第 1 步：定位相关页面
+## Step 1: Locate relevant pages
 
-读 [`index.md`](../index.md) 找相关页面。
+Read [`index.md`](../index.md) to find related pages.
 
-## 第 2 步：搜索
+## Step 2: Search
 
-读 [`extensions/qmd/README.md`](../extensions/qmd/README.md) 了解搜索方法（qmd 语义搜索或 rg 回退）。
+Read [`extensions/qmd/README.md`](../extensions/qmd/README.md) for search methods (qmd semantic search or rg fallback).
 
-## 第 3 步：阅读与综合
+## Step 3: Read and synthesize
 
-读相关 `pages/` `sources/`，综合答案。
+Read relevant `pages/` and `sources/`, synthesize an answer.
 
-## 第 4 步：回复
+## Step 4: Reply
 
-回复带 `[[链接]]` 引用来源。
+Reply with `[[link]]` references to sources.
 
-## 第 5 步：判断是否回填
+## Step 5: Decide whether to backfill
 
-如果探索产生了新综合/对比/洞察，主动问用户："要回填到 `queries/` 吗？"
+If the exploration produced new synthesis, comparison, or insight, proactively ask the user: "Should this be backfilled to `queries/`?"
 
-## 第 6 步：若回填
+## Step 6: If backfilling
 
-1. 读 [`taxonomy.md`](../taxonomy.md) 选 tags
-2. 写 `queries/YYYY-MM-DD-slug.md`
-3. 更新被引用 pages 的反向链接
-4. 追加 `log.md`：`## [YYYY-MM-DD] query | <question>`
-5. Git commit：`query: <question>`
+1. Read [`taxonomy.md`](../taxonomy.md) to select tags
+2. Write `queries/YYYY-MM-DD-slug.md`
+3. Update backlinks on referenced pages
+4. Append to `log.md`: `## [YYYY-MM-DD] query | <question>`
+5. Git commit: `query: <question>`

@@ -29,6 +29,7 @@ interface EntryCardProps {
 export function EntryCard({ entry, index = 0, compact = false }: EntryCardProps) {
   const shapeClass = CARD_SHAPES[index % CARD_SHAPES.length];
   const previewTags = entry.tags.slice(0, compact ? 2 : 3);
+  const displayDate = formatDate(entry.sortDate);
 
   return (
     <Link
@@ -47,15 +48,15 @@ export function EntryCard({ entry, index = 0, compact = false }: EntryCardProps)
       </h3>
 
       <p className={`mt-3 text-[color:var(--muted)] ${compact ? "text-sm" : "text-[0.98rem]"}`}>
-        {entry.excerpt || "打开这篇条目继续阅读正文。"}
+        {entry.excerpt || "Open this entry to read the full content."}
       </p>
 
       <div className="mt-5 flex flex-wrap items-center gap-2 text-xs text-[color:var(--muted)]">
-        {formatDate(entry.sortDate) ? (
+        {displayDate && (
           <span className="rounded-full bg-[color:var(--accent-soft)] px-3 py-1 text-[color:var(--accent-strong)]">
-            {formatDate(entry.sortDate)}
+            {displayDate}
           </span>
-        ) : null}
+        )}
         {previewTags.map((tag) => (
           <span key={`${entry.slug}-${tag}`} className="rounded-full border border-[color:var(--border)] px-3 py-1">
             #{tag}

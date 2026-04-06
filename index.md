@@ -1,64 +1,64 @@
 # Index
 
-> MyWiki 的内容目录。LLM 在每次 ingest / query 回填 / lint 后自动重新生成。
-> 查询 wiki 时，**先读本文件**定位相关页面，再深入阅读。
+> Content directory for MyWiki. The LLM regenerates this after every ingest / query backfill / lint.
+> When querying the wiki, **read this file first** to locate relevant pages, then read further.
 
-**最后更新**：2026-04-05
-**规模**：1 source · 14 pages · 0 maps · 0 queries
+**Last updated**: 2026-04-05
+**Scale**: 1 source, 14 pages, 0 maps, 0 queries
 
 ---
 
-## 📚 Pages（按 type）
+## Pages (by type)
 
 ### entity
-_(空)_
+_(empty)_
 
 ### person
-- [[sebastian-raschka]] — LLM research engineer / *Ahead of AI* 作者
+- [[sebastian-raschka]] -- LLM research engineer, *Ahead of AI* author
 
 ### concept
-- [[reasoning-model]] — 推理模型：在推理期多花算力做中间推理和自验证的 LLM
-- [[context-engineering]] — 上下文工程："apparent model quality is really context quality"
-- [[prompt-prefix-caching]] — 稳定前缀缓存：把 prompt 分成稳定部分与易变部分
-- [[context-bloat]] — 上下文膨胀的应对：clipping / 压缩 / 去重
-- [[agent-session-memory]] — 会话记忆三层结构：full transcript / working memory / compact transcript
-- [[bounded-subagent]] — 受约束的子智能体："spawn 容易，bind 难"
-- [[structured-tool-use]] — 结构化工具调用的验证管线
+- [[reasoning-model]] -- Reasoning models: LLMs that spend extra compute on intermediate reasoning and self-validation
+- [[context-engineering]] -- Context engineering: "apparent model quality is really context quality"
+- [[prompt-prefix-caching]] -- Stable prefix caching: splitting prompts into stable and volatile parts
+- [[context-bloat]] -- Managing context bloat: clipping / compression / deduplication
+- [[agent-session-memory]] -- Session memory three-layer structure: full transcript / working memory / compact transcript
+- [[bounded-subagent]] -- Bounded subagents: "spawn easy, bind hard"
+- [[structured-tool-use]] -- Validation pipeline for structured tool calls
 
 ### topic
-- [[coding-agent]] — 编码智能体 / coding harness（本次 ingest 的中心枢纽）
+- [[coding-agent]] -- Coding agent / coding harness (hub page for this ingest)
 
 ### tool
-- [[claude-code]] — Anthropic 的终端 coding agent
-- [[codex-cli]] — OpenAI 的终端 coding agent
-- [[mini-coding-agent]] — Sebastian Raschka 的纯 Python 从零实现
-- [[openclaw]] — 更广义的本地通用 agent 平台
+- [[claude-code]] -- Anthropic's terminal coding agent
+- [[codex-cli]] -- OpenAI's terminal coding agent
+- [[mini-coding-agent]] -- Sebastian Raschka's pure Python from-scratch implementation
+- [[openclaw]] -- A broader local general-purpose agent platform
 
 ### book
-- [[build-a-reasoning-model-from-scratch]] — Raschka 2026 年新书，Manning
+- [[build-a-reasoning-model-from-scratch]] -- Raschka 2026, Manning
 
 ### note
-_(空)_
+_(empty)_
 
 ---
 
-## 🗺 Maps
-_(空)_
+## Maps
+_(empty)_
 
 ---
 
-## 📝 Sources（按时间倒序）
+## Sources (reverse chronological)
 
-- **2026-04-04** [[2026-04-04-components-of-a-coding-agent]] — *Components of A Coding Agent* · Sebastian Raschka · Ahead of AI
-
----
-
-## 🔍 Queries（按时间倒序）
-_(空)_
+- **2026-04-04** [[2026-04-04-components-of-a-coding-agent]] -- *Components of A Coding Agent*, Sebastian Raschka, Ahead of AI
 
 ---
 
-## 🏷 按 Tag 索引
+## Queries (reverse chronological)
+_(empty)_
+
+---
+
+## Tag index
 
 ### tech/agent
 - [[coding-agent]]

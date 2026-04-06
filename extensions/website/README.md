@@ -1,86 +1,106 @@
-# website — 静态站点生成
+# website -- static site generation
 
-> 需要将 wiki 部署为网站时读取本文件。自包含：检测 → 使用 → 回退。
-
----
-
-## 检测
-
-满足**全部**两项才可用：
-
-1. `test -f extensions/website/node_modules/.package-lock.json` 返回成功
-2. `cd extensions/website && npm run build` 能完成构建
-
-**任一项不满足 → 跳到下方「安装」或「回退」小节。**
+> Read this file when you need to deploy the wiki as a website. Self-contained: detect, use, fallback.
 
 ---
 
-## 使用（website 可用时）
+## Detection
 
-### 本地开发
+Both conditions must be met:
+
+1. `test -f extensions/website/node_modules/.package-lock.json` succeeds
+2. `cd extensions/website && npm run build` completes successfully
+
+**If either fails, skip to the "Install" section below.**
+
+---
+
+## Usage (when website is available)
+
+### Local development
 
 ```bash
 cd extensions/website
 npm run dev
 ```
 
-启动本地开发服务器，默认地址：`http://localhost:3000`。
+Starts a local dev server at `http://localhost:3000` with hot reloading.
 
-### 静态构建
+### Static build
 
 ```bash
 cd extensions/website
 npm run build
 ```
 
-构建产物输出到 `out/`。
+Build output goes to `extensions/website/out/`.
 
-### 预览与部署
+### Local preview of the static build
 
-本地预览：
+The `out/` directory is a fully static export. To preview it locally with correct styles and routing, use a static file server:
 
 ```bash
 cd extensions/website
-npx serve out/
+npx serve out
 ```
 
-线上部署：将 `out/` 推送到 Vercel，或上传到任意静态站点托管服务。
+This serves the site at `http://localhost:3000`. Opening `out/index.html` directly in a browser will not work because the static export relies on proper path resolution for CSS and JS assets.
 
-### 内容来源
+### Deploying to Vercel
 
-网站在 build 时直接读取 wiki 根目录下的：
+Vercel is the recommended hosting platform for Next.js static exports.
+
+1. Push the repository to GitHub (if not already done)
+2. Go to [vercel.com](https://vercel.com) and import the repository
+3. Set the **Root Directory** to `extensions/website`
+4. Vercel auto-detects Next.js and configures the build
+5. Deploy. The site is live.
+
+Subsequent pushes to main trigger automatic redeployments.
+
+Alternatively, ask your AI agent: "Deploy my wiki to Vercel" and it will walk you through the process.
+
+### Other static hosts
+
+The `out/` directory can be deployed to any static hosting service (Netlify, GitHub Pages, Cloudflare Pages, etc.). Point the build command to `cd extensions/website && npm run build` and the output directory to `extensions/website/out`.
+
+### Content source
+
+The website reads directly from the wiki root at build time:
 
 - `../../pages/`
 - `../../sources/`
 - `../../maps/`
 - `../../queries/`
 
-不复制内容，不维护第二份数据。
+No content is copied or duplicated. Rebuild after wiki changes to update the site.
 
 ---
 
-## 回退（website 不可用时）
+## Fallback (when website is unavailable)
 
-直接在 Obsidian 或任意文本编辑器中阅读 `pages/`、`sources/`、`maps/`、`queries/` 里的 Markdown 文件。
+Read `pages/`, `sources/`, `maps/`, `queries/` as markdown files directly in Obsidian or any text editor.
 
 ---
 
-## 安装（给人类用户）
+## Installation (for human users)
 
 ```bash
 bash extensions/website/init.sh
-# 或手动：
+# or manually:
 cd extensions/website && npm install
 ```
 
-## 文件说明
+Or ask your AI agent: "Set up the website extension" and it will handle the installation.
 
-| 文件 | 角色 |
+## Files
+
+| File | Role |
 |---|---|
-| `README.md` | 本文件 |
-| `init.sh` | 一次性安装脚本 |
-| `package.json` | website 的 npm scripts 与依赖 |
-| `next.config.ts` | Next.js 构建配置 |
-| `app/` | 路由与页面入口 |
-| `lib/` | Markdown / wiki 内容读取与转换逻辑 |
-| `components/` | 站点 UI 组件 |
+| `README.md` | This file |
+| `init.sh` | One-time installation script |
+| `package.json` | npm scripts and dependencies |
+| `next.config.ts` | Next.js build configuration |
+| `app/` | Routes and page entry points |
+| `lib/` | Markdown / wiki content reading and transformation |
+| `components/` | Site UI components |

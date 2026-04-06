@@ -1,34 +1,34 @@
-# Lint — 健康检查
+# Lint
 
-> 用户说"跑一次 lint"时再读取本文档。
-
----
-
-## 前置读取
-
-[`taxonomy.md`](../taxonomy.md) — 需要对比检查术语漂移。
+> Read this document when the user says "run a lint" or "health check".
 
 ---
 
-## 检查项
+## Prerequisites
 
-1. **术语漂移**：扫描所有 frontmatter `tags`，对比 `taxonomy.md`，报告未登记 tag 和疑似变体
-2. **孤儿页面**：`pages/` 中没有被任何其他文件链接的
-3. **断链**：`[[...]]` 指向不存在文件的
-4. **矛盾**：互相链接的页面中主张冲突的
-5. **过期**：新源已覆盖但旧页面未更新的
-6. **缺页**：被多次提及但没有独立页面的概念/实体
+[`taxonomy.md`](../taxonomy.md) -- needed to check for term drift.
 
-## 搜索工具
+---
 
-读 [`extensions/qmd/README.md`](../extensions/qmd/README.md) 了解搜索方法，或直接使用：
+## Checks
+
+1. **Term drift**: scan all frontmatter `tags`, compare against `taxonomy.md`, report unregistered tags and suspected variants
+2. **Orphan pages**: pages in `pages/` not linked from any other file
+3. **Broken links**: `[[...]]` pointing to nonexistent files
+4. **Contradictions**: conflicting claims across interlinked pages
+5. **Staleness**: older pages not updated after newer sources have covered the topic
+6. **Missing pages**: concepts/entities mentioned multiple times but lacking a dedicated page
+
+## Search tools
+
+Read [`extensions/qmd/README.md`](../extensions/qmd/README.md) for search methods, or use directly:
 
 ```bash
 rg -l "pattern" pages sources maps queries
 rg "^tags:" pages/ sources/ --no-heading
 ```
 
-## 执行
+## Execution
 
-1. **输出报告**给用户，**等确认**后再修复
-2. 修复后：追加 `log.md` + commit：`lint: <summary>`
+1. **Output a report** to the user, **wait for confirmation** before fixing
+2. After fixing: append to `log.md` + commit: `lint: <summary>`

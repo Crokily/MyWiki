@@ -12,7 +12,7 @@ export function BackLinksSidebar({ pages }: BackLinksProps) {
   return (
     <div>
       <p className="text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">
-        反向引用
+        Backlinks
         <span className="ml-2 font-normal">{pages.length}</span>
       </p>
       <div className="mt-3 space-y-1.5">
