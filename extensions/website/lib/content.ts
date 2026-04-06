@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
 
+export { formatDate } from "@/lib/site";
 import { extractWikiLinksFromText } from "@/lib/wikilinks";
 
 export const CONTENT_DIRECTORIES = ["pages", "sources", "maps", "queries"] as const;
@@ -234,24 +235,6 @@ export function getRecentPages(limit = 6) {
 
 export function tagToHref(tag: string) {
   return `/tags/${tag.split("/").map((segment) => encodeURIComponent(segment)).join("/")}`;
-}
-
-export function formatDate(date?: string) {
-  if (!date) {
-    return null;
-  }
-
-  const parsed = new Date(date);
-
-  if (Number.isNaN(parsed.getTime())) {
-    return date;
-  }
-
-  return new Intl.DateTimeFormat("zh-CN", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  }).format(parsed);
 }
 
 export function getRootTagGroups() {

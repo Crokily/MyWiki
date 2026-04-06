@@ -2,18 +2,20 @@ import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <section className="surface rounded-[2rem] p-8">
-      <p className="text-sm uppercase tracking-[0.25em] text-[color:var(--muted)]">404</p>
-      <h1 className="mt-4 font-serif text-4xl">页面不存在</h1>
-      <p className="mt-4 max-w-xl text-[color:var(--muted)]">
-        这个 slug 或标签没有对应的静态页面。请回到首页，或者从侧边栏标签继续导航。
+    <section className="surface rounded-[2.5rem] px-5 py-8 sm:px-7">
+      <p className="text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">404</p>
+      <h1 className="mt-4 font-serif text-5xl leading-none tracking-[-0.05em]">页面不存在</h1>
+      <p className="mt-4 max-w-2xl text-[color:var(--muted)]">
+        没有找到对应的条目。试试回到首页浏览或搜索。
       </p>
-      <Link
-        href="/"
-        className="mt-6 inline-flex rounded-full bg-[color:var(--accent)] px-5 py-2.5 text-sm font-medium text-white transition hover:opacity-90"
-      >
-        返回首页
-      </Link>
+      <div className="mt-6">
+        <Link
+          href="/"
+          className="inline-flex rounded-full bg-[color:var(--accent)] px-5 py-3 text-sm font-semibold text-[color:var(--accent-contrast)] transition hover:scale-[1.02] hover:bg-[color:var(--accent-strong)]"
+        >
+          返回首页
+        </Link>
+      </div>
     </section>
   );
 }

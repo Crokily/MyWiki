@@ -3,10 +3,17 @@ import remarkGfm from "remark-gfm";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import rehypeRaw from "rehype-raw";
+import rehypeSlug from "rehype-slug";
 import rehypeStringify from "rehype-stringify";
 
 import { getAllPages } from "@/lib/content";
 import { extractWikiLinksFromText } from "@/lib/wikilinks";
+
+export interface TocHeading {
+  id: string;
+  text: string;
+  level: 2 | 3;
+}
 
 interface MarkdownNode {
   type: string;
@@ -106,9 +113,27 @@ export async function renderMarkdown(content: string) {
     .use(remarkWikiLinks)
     .use(remarkRehype, { allowDangerousHtml: true })
     .use(rehypeRaw)
+    .use(rehypeSlug)
     .use(rehypeStringify, { allowDangerousHtml: true })
     .process(content);
 
   return String(rendered);
+}
+
+export function extractHeadings(html: string): TocHeading[] {
+  const headings: TocHeading[] = [];
+  const regex = /<h([23])\s+id="([^"]+)"[^>]*>(.*?)<\/h[23]>/gi;
+
+  let match: RegExpExecArray | null;
+  while ((match = regex.exec(html)) !== null) {
+    const level = Number(match[1]) as 2 | 3;
+    const id = match[2];
+    const text = match[3].replace(/<[^>]+>/g, "").trim();
+    if (text) {
+      headings.push({ id, text, level });
+    }
+  }
+
+  return headings;
 }
 

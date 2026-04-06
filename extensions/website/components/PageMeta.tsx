@@ -1,7 +1,8 @@
 import Link from "next/link";
 
 import type { WikiEntry } from "@/lib/content";
-import { formatDate, getPageBySlug, tagToHref } from "@/lib/content";
+import { getPageBySlug, tagToHref } from "@/lib/content";
+import { DIRECTORY_LABELS, formatDate } from "@/lib/site";
 import { parseWikiLink } from "@/lib/wikilinks";
 
 interface PageMetaProps {
@@ -19,111 +20,104 @@ function renderLinkLikeValue(value: string) {
   const label = parsed.text || target?.title || parsed.slug;
 
   return (
-    <Link href={`/${parsed.slug}`} className="hover:text-[color:var(--accent)]">
+    <Link href={`/${parsed.slug}`} className="hover:text-[color:var(--accent-strong)]">
       {label}
     </Link>
   );
 }
 
-function renderStringList(values: string[]) {
-  return (
-    <div className="flex flex-wrap gap-2">
-      {values.map((value) => (
-        <span key={value} className="rounded-full border border-[color:var(--border)] px-3 py-1 text-sm">
-          {renderLinkLikeValue(value)}
-        </span>
-      ))}
-    </div>
-  );
-}
-
-export function PageMeta({ page }: PageMetaProps) {
+export function PageMetaSidebar({ page }: PageMetaProps) {
   const { frontmatter } = page;
   const classification = frontmatter.type || frontmatter.kind || page.directory;
   const tags = page.tags;
-  const sourceLinks = Array.isArray(frontmatter.sources) ? frontmatter.sources.filter((value): value is string => typeof value === "string") : [];
-  const touches = Array.isArray(frontmatter.touches) ? frontmatter.touches.filter((value): value is string => typeof value === "string") : [];
+  const sourceLinks = Array.isArray(frontmatter.sources) ? frontmatter.sources.filter((v): v is string => typeof v === "string") : [];
+  const touches = Array.isArray(frontmatter.touches) ? frontmatter.touches.filter((v): v is string => typeof v === "string") : [];
+
+  const timeline = [
+    frontmatter.updated ? `更新 ${formatDate(frontmatter.updated)}` : null,
+    frontmatter.created ? `创建 ${formatDate(frontmatter.created)}` : null,
+    typeof frontmatter.ingested === "string" ? `摄入 ${formatDate(frontmatter.ingested)}` : null,
+  ].filter((item): item is string => Boolean(item));
 
   return (
-    <section className="surface rounded-[1.75rem] p-6">
-      <div className="flex flex-wrap items-center gap-3">
-        <span className="rounded-full bg-[color:var(--accent-soft)] px-3 py-1 text-sm font-medium text-[color:var(--accent)]">
-          {classification}
-        </span>
-        <span className="text-sm uppercase tracking-[0.2em] text-[color:var(--muted)]">{page.directory}</span>
+    <div className="space-y-5">
+      {/* Classification & Directory */}
+      <div>
+        <p className="text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">信息</p>
+        <div className="mt-3 space-y-2 text-sm">
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-[color:var(--muted)]">类型</span>
+            <span className="pill-chip pill-chip-primary text-xs">{classification}</span>
+          </div>
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-[color:var(--muted)]">目录</span>
+            <span className="text-[color:var(--foreground)]">{DIRECTORY_LABELS[page.directory]}</span>
+          </div>
+          {timeline.map((item) => (
+            <div key={item} className="text-xs text-[color:var(--muted)]">{item}</div>
+          ))}
+        </div>
       </div>
 
-      <dl className="mt-5 grid gap-4 text-sm md:grid-cols-2">
+      {/* Tags */}
+      {tags.length > 0 && (
         <div>
-          <dt className="mb-2 text-[color:var(--muted)]">Tags</dt>
-          <dd className="flex flex-wrap gap-2">
-            {tags.length === 0 ? (
-              <span>暂无</span>
-            ) : (
-              tags.map((tag) => (
-                <Link
-                  key={tag}
-                  href={tagToHref(tag)}
-                  className="tag-chip rounded-full px-3 py-1 transition hover:border-[color:var(--accent)] hover:text-[color:var(--accent)]"
-                >
-                  #{tag}
-                </Link>
-              ))
-            )}
-          </dd>
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">标签</p>
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {tags.map((tag) => (
+              <Link
+                key={tag}
+                href={tagToHref(tag)}
+                className="tag-chip rounded-full px-2.5 py-1 text-xs transition hover:border-[color:var(--accent)] hover:text-[color:var(--accent-strong)]"
+              >
+                #{tag}
+              </Link>
+            ))}
+          </div>
         </div>
+      )}
 
+      {/* Sources */}
+      {sourceLinks.length > 0 && (
         <div>
-          <dt className="mb-2 text-[color:var(--muted)]">Dates</dt>
-          <dd className="space-y-1">
-            {frontmatter.updated ? <div>更新于 {formatDate(frontmatter.updated)}</div> : null}
-            {frontmatter.created ? <div>创建于 {formatDate(frontmatter.created)}</div> : null}
-            {typeof frontmatter.ingested === "string" ? <div>摄入于 {formatDate(frontmatter.ingested)}</div> : null}
-            {typeof frontmatter.published === "string" ? <div>发布于 {formatDate(frontmatter.published)}</div> : null}
-            {typeof frontmatter.asked === "string" ? <div>记录于 {formatDate(frontmatter.asked)}</div> : null}
-          </dd>
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">来源</p>
+          <div className="mt-3 space-y-1.5">
+            {sourceLinks.map((src) => (
+              <div key={src} className="text-sm">{renderLinkLikeValue(src)}</div>
+            ))}
+          </div>
         </div>
+      )}
 
-        {sourceLinks.length > 0 ? (
-          <div>
-            <dt className="mb-2 text-[color:var(--muted)]">Sources</dt>
-            <dd>{renderStringList(sourceLinks)}</dd>
+      {/* Touches */}
+      {touches.length > 0 && (
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">关联</p>
+          <div className="mt-3 space-y-1.5">
+            {touches.map((t) => (
+              <div key={t} className="text-sm">{renderLinkLikeValue(t)}</div>
+            ))}
           </div>
-        ) : null}
+        </div>
+      )}
 
-        {touches.length > 0 ? (
-          <div>
-            <dt className="mb-2 text-[color:var(--muted)]">Touches</dt>
-            <dd>{renderStringList(touches)}</dd>
-          </div>
-        ) : null}
+      {/* URL */}
+      {typeof frontmatter.url === "string" && (
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">链接</p>
+          <a href={frontmatter.url} className="mt-2 block break-all text-sm text-[color:var(--accent-strong)] underline" target="_blank" rel="noreferrer">
+            {frontmatter.url}
+          </a>
+        </div>
+      )}
 
-        {typeof frontmatter.author === "string" ? (
-          <div>
-            <dt className="mb-2 text-[color:var(--muted)]">Author</dt>
-            <dd>{renderLinkLikeValue(frontmatter.author)}</dd>
-          </div>
-        ) : null}
-
-        {typeof frontmatter.raw === "string" ? (
-          <div>
-            <dt className="mb-2 text-[color:var(--muted)]">Raw</dt>
-            <dd>{renderLinkLikeValue(frontmatter.raw)}</dd>
-          </div>
-        ) : null}
-
-        {typeof frontmatter.url === "string" ? (
-          <div className="md:col-span-2">
-            <dt className="mb-2 text-[color:var(--muted)]">URL</dt>
-            <dd>
-              <a href={frontmatter.url} className="break-all text-[color:var(--accent)] underline" target="_blank" rel="noreferrer">
-                {frontmatter.url}
-              </a>
-            </dd>
-          </div>
-        ) : null}
-      </dl>
-    </section>
+      {/* Author */}
+      {typeof frontmatter.author === "string" && (
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">作者</p>
+          <div className="mt-2 text-sm">{renderLinkLikeValue(frontmatter.author)}</div>
+        </div>
+      )}
+    </div>
   );
 }
-

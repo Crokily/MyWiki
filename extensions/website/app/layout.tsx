@@ -1,21 +1,22 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Mono, IBM_Plex_Sans, Newsreader } from "next/font/google";
+import { Fraunces, IBM_Plex_Mono, Nunito } from "next/font/google";
+import type { ReactNode } from "react";
 
-import { Sidebar } from "@/components/Sidebar";
-import { getAllTags } from "@/lib/content";
+import { SiteHeader } from "@/components/SiteHeader";
+import { getAllPages } from "@/lib/content";
 
 import "./globals.css";
 
-const bodyFont = IBM_Plex_Sans({
+const bodyFont = Nunito({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["400", "500", "600", "700"],
   variable: "--font-body",
   display: "swap",
 });
 
-const displayFont = Newsreader({
+const displayFont = Fraunces({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["600", "700"],
   variable: "--font-display",
   display: "swap",
 });
@@ -32,33 +33,35 @@ export const metadata: Metadata = {
     default: "MyWiki",
     template: "%s | MyWiki",
   },
-  description: "Static website extension for the MyWiki markdown knowledge base.",
+  description: "由 LLM 增量维护的个人知识库",
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#9f4c24",
+  themeColor: "#5d7052",
 };
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
-  const tags = getAllTags();
+  const searchEntries = getAllPages().map((p) => ({
+    slug: p.slug,
+    href: p.href,
+    title: p.title,
+    directory: p.directory,
+  }));
 
   return (
     <html lang="zh-CN" className={`${bodyFont.variable} ${displayFont.variable} ${monoFont.variable}`}>
       <body>
-        <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col gap-6 px-4 py-6 lg:flex-row lg:px-6">
-          <Sidebar tags={tags} />
-          <main className="min-w-0 flex-1">
-            <div className="space-y-6">{children}</div>
-          </main>
+        <div className="relative isolate min-h-screen px-4 py-4 sm:px-6">
+          <SiteHeader entries={searchEntries} />
+          <main className="mx-auto mt-6 w-full max-w-7xl pb-10">{children}</main>
         </div>
       </body>
     </html>
   );
 }
-
