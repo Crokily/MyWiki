@@ -129,3 +129,15 @@ extensions/
 **效果验证**：本次 commit 后，AI agent 进入项目 → 读 AGENTS.md § 0 → ls extensions/ → 读 qmd/README.md → 检测到 qmd 已装且 context 存在 → 采用 qmd 搜索工作流。用户体验无感。
 
 **public 分支**：本次改动属于“非文档的框架配置”，将 cherry-pick 到 public。
+
+---
+
+## [2026-04-06] meta | web-reader 改为 defuddle 直连
+
+将 `extensions/web-reader/README.md` 的 URL 抓取优先级从 `curl + defuddle` 调整为：
+
+1. `defuddle` 直连 URL
+2. `agent-browser + defuddle`
+3. `agent-browser` 纯文本 fallback
+
+同时同步更新了 raw 头部中的 `Retrieved` 说明与设计示意图。
