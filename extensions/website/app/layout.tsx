@@ -1,29 +1,22 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Mono, IBM_Plex_Sans, Newsreader } from "next/font/google";
+import { Inter, IBM_Plex_Mono } from "next/font/google";
 
 import { Sidebar } from "@/components/Sidebar";
 import { getAllTags } from "@/lib/content";
 
 import "./globals.css";
 
-const bodyFont = IBM_Plex_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-body",
-  display: "swap",
-});
-
-const displayFont = Newsreader({
+const bodyFont = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
-  variable: "--font-display",
+  variable: "--font-body",
   display: "swap",
 });
 
 const monoFont = IBM_Plex_Mono({
   subsets: ["latin"],
   weight: ["400", "500"],
-  variable: "--font-mono",
+  variable: "--font-mono-code",
   display: "swap",
 });
 
@@ -32,13 +25,13 @@ export const metadata: Metadata = {
     default: "MyWiki",
     template: "%s | MyWiki",
   },
-  description: "Static website extension for the MyWiki markdown knowledge base.",
+  description: "Personal knowledge base powered by markdown.",
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#9f4c24",
+  themeColor: "#2563eb",
 };
 
 export default function RootLayout({
@@ -49,9 +42,9 @@ export default function RootLayout({
   const tags = getAllTags();
 
   return (
-    <html lang="zh-CN" className={`${bodyFont.variable} ${displayFont.variable} ${monoFont.variable}`}>
+    <html lang="zh-CN" className={`${bodyFont.variable} ${monoFont.variable}`}>
       <body>
-        <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col gap-6 px-4 py-6 lg:flex-row lg:px-6">
+        <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col gap-6 px-4 py-6 lg:flex-row lg:gap-8 lg:px-6">
           <Sidebar tags={tags} />
           <main className="min-w-0 flex-1">
             <div className="space-y-6">{children}</div>
@@ -61,4 +54,3 @@ export default function RootLayout({
     </html>
   );
 }
-
