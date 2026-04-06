@@ -11,6 +11,7 @@
 |---|---|---|
 | [`qmd/`](./qmd/README.md) | 混合语义搜索 | 需要搜索 wiki 内容时 |
 | [`web-reader/`](./web-reader/README.md) | 网页内容提取 | 从 URL 抓取内容时 |
+| [`website/`](./website/README.md) | 静态站点生成 | 需要将 wiki 部署为网站时 |
 
 ## 新增扩展
 
