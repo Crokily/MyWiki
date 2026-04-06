@@ -47,7 +47,7 @@ npm install -g @tobilu/qmd
 
 ```
 MyWiki/
-├── AGENTS.md       LLM 操作手册（工作流 + 规则）
+├── AGENTS.md       LLM 操作手册（核心规则，精简，每次会话加载）
 ├── taxonomy.md     受控词表（type / tags / aliases 规范）
 ├── index.md        内容目录（LLM 维护）
 ├── log.md          时间线（append-only）
@@ -55,12 +55,19 @@ MyWiki/
 ├── README.md       本文件
 ├── qmd.yml         qmd 搜索配置
 │
-├── raw/            📥 不可变原始源（markdown）
+├── workflows/      🔄 工作流文档（按需加载，不预读）
+│   ├── ingest.md   摄入新源
+│   ├── query.md    查询 wiki
+│   └── lint.md     健康检查
+├── extensions/     🔌 可选能力扩展（按需加载，不预读）
+│   ├── qmd/        混合语义搜索
+│   └── web-reader/ 网页内容提取
+│
+├── raw/            📥 不可变原始源
 ├── sources/        📝 每源一页摘要（1:1 同 basename）
 ├── pages/          📚 wiki 页面：实体/概念/主题/工具/书/人物/笔记
 ├── maps/           🗺  高层 MOC / 领域地图
-├── queries/        🔍 回填的探索、对比、分析
-└── scripts/        🔧 维护脚本
+└── queries/        🔍 回填的探索、对比、分析
 ```
 
 ---
@@ -90,12 +97,9 @@ MyWiki/
 
 ## 给 LLM Agent 的入口
 
-**读 [`AGENTS.md`](./AGENTS.md)**。所有工作流规则都在里面。
+**只需读 [`AGENTS.md`](./AGENTS.md)**。它是唯一需要在会话开始时加载的文件。
 
-第一次会话时，agent 应该按顺序读：
-1. `AGENTS.md` — 规则
-2. `taxonomy.md` — 词表
-3. `log.md` 最后几条 — 最近发生了什么
+AGENTS.md 包含核心规则，并会在需要时指引你读取工作流文档（`workflows/`）和扩展文档（`extensions/`）。不要预读所有文件。
 
 ---
 

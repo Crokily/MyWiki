@@ -141,3 +141,34 @@ extensions/
 3. `agent-browser` 纯文本 fallback
 
 同时同步更新了 raw 头部中的 `Retrieved` 说明与设计示意图。
+
+---
+
+## [2026-04-06] meta | 按需加载重构：精简 AGENTS.md + 工作流分离 + 扩展自包含
+
+**问题**：每次会话开始时，agent 无条件加载 AGENTS.md + taxonomy.md + 所有扩展 README + log.md（~28K chars / ~8K tokens），无论用户实际只需要做什么任务。
+
+**改动**：
+
+1. **AGENTS.md 精简**：从 ~285 行缩减到 ~130 行，只保留核心规则（架构、命名、frontmatter、链接、语言、git、禁止事项）。删除了「首次会话 Checklist」和所有内联工作流。
+
+2. **工作流分离到 `workflows/`**（按需加载）：
+   - `workflows/ingest.md` — 摄入新源（原 § 6）
+   - `workflows/query.md` — 查询 wiki（原 § 7）
+   - `workflows/lint.md` — 健康检查（原 § 8）
+
+3. **扩展机制重构**：
+   - 删除「会话开始时必须加载所有扩展」的协议
+   - 每个扩展 README 改为**自包含**格式（检测 → 使用 → 回退 → 安装）
+   - 删除「覆盖 AGENTS.md § X」的概念——扩展不再是补丁，而是独立的能力文档
+   - 工作流在需要时引用扩展，而非启动时全量预加载
+
+4. **更新 README.md**：目录结构 + agent 入口说明
+
+**效果**：
+- 简单任务（如 query）：从 ~8K tokens 启动开销降至 ~1.5K tokens（只读 AGENTS.md + query workflow）
+- 完整 ingest：按需逐步加载，总量类似但分散在工作流进行中而非全部前置
+- 所有文档对任意 agent（Claude Code / Codex / Pi 等）通用，无平台特定依赖
+
+**新增文件**：`workflows/ingest.md` `workflows/query.md` `workflows/lint.md`
+**重写文件**：`AGENTS.md` `extensions/README.md` `extensions/qmd/README.md` `extensions/web-reader/README.md` `README.md`
