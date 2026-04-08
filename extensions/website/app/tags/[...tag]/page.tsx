@@ -69,8 +69,8 @@ export default async function TagPage({ params }: TagPageProps) {
         </section>
 
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          {items.map((page) => (
-            <EntryCard key={page.slug} entry={page} />
+          {items.map((page, index) => (
+            <EntryCard key={page.slug} entry={page} index={index} />
           ))}
         </div>
       </div>

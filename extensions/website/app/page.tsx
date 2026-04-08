@@ -37,8 +37,8 @@ export default function HomePage() {
             <span className="text-sm text-[color:var(--muted)]">{recentEntries.length} entries</span>
           </div>
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-            {recentEntries.map((page) => (
-              <EntryCard key={page.slug} entry={page} />
+            {recentEntries.map((page, index) => (
+              <EntryCard key={page.slug} entry={page} index={index} />
             ))}
           </div>
         </section>

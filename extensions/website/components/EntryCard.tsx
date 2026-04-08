@@ -2,6 +2,13 @@ import Link from "next/link";
 
 import { DIRECTORY_LABELS, formatDate } from "@/lib/site";
 
+const CARD_SHAPES = [
+  "rounded-[2rem] rounded-tr-[3.75rem]",
+  "rounded-[2rem] rounded-bl-[3.5rem]",
+  "rounded-[2rem] rounded-tl-[3.5rem]",
+  "rounded-[2rem] rounded-br-[3.75rem]",
+] as const;
+
 export interface EntryCardData {
   slug: string;
   href: string;
@@ -15,17 +22,19 @@ export interface EntryCardData {
 
 interface EntryCardProps {
   entry: EntryCardData;
+  index?: number;
   compact?: boolean;
 }
 
-export function EntryCard({ entry, compact = false }: EntryCardProps) {
+export function EntryCard({ entry, index = 0, compact = false }: EntryCardProps) {
+  const shapeClass = CARD_SHAPES[index % CARD_SHAPES.length];
   const previewTags = entry.tags.slice(0, compact ? 2 : 3);
   const displayDate = formatDate(entry.sortDate);
 
   return (
     <Link
       href={entry.href}
-      className={`group block rounded-xl border border-[color:var(--border)] bg-[color:var(--surface-card)] transition duration-300 hover:-translate-y-1 hover:border-[color:var(--accent)] hover:shadow-[var(--shadow-float)] ${compact ? "p-4" : "p-4 md:p-5"}`}
+      className={`group block border border-[color:var(--border)] bg-[color:var(--surface-card)] transition duration-300 hover:-translate-y-1 hover:border-[color:var(--accent)] hover:shadow-[var(--shadow-float)] ${shapeClass} ${compact ? "p-4" : "p-4 md:p-5"}`}
     >
       <div className="flex flex-wrap items-center gap-1.5">
         <span className="pill-chip pill-chip-primary text-[0.72rem]">{entry.classification}</span>
