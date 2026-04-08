@@ -1,0 +1,6 @@
+{
+  "buildCommand": "cd extensions/website && npm install && npm run build",
+  "outputDirectory": "extensions/website/out",
+  "framework": null,
+  "installCommand": "echo skip"
+}
