@@ -28,15 +28,15 @@ interface EntryCardProps {
 }
 
 export function EntryCard({ entry, index = 0, compact = false, variant = "default" }: EntryCardProps) {
-  const shapeClass = CARD_SHAPES[index % CARD_SHAPES.length];
   const isRecent = variant === "recent";
+  const shapeClass = isRecent ? "rounded-[2rem] rounded-tr-[3.75rem]" : CARD_SHAPES[index % CARD_SHAPES.length];
   const previewTags = entry.tags.slice(0, compact ? 2 : 3);
   const displayDate = formatDate(entry.sortDate);
 
   return (
     <Link
       href={entry.href}
-      className={`group block border border-[color:var(--border)] bg-[color:var(--surface-card)] transition duration-300 hover:-translate-y-1 hover:border-[color:var(--accent)] hover:shadow-[var(--shadow-float)] ${shapeClass} ${isRecent ? "h-[15.5rem] p-4" : compact ? "p-4" : "p-4 md:p-5"}`}
+      className={`group block border border-[color:var(--border)] bg-[color:var(--surface-card)] transition duration-300 hover:-translate-y-1 hover:border-[color:var(--accent)] hover:shadow-[var(--shadow-float)] ${shapeClass} ${isRecent ? "h-[14.5rem] p-4" : compact ? "p-4" : "p-4 md:p-5"}`}
     >
       <div className="flex h-full flex-col">
         {isRecent ? (
@@ -51,19 +51,19 @@ export function EntryCard({ entry, index = 0, compact = false, variant = "defaul
         )}
 
         <h3
-          className={`font-serif leading-tight tracking-[-0.03em] text-[color:var(--foreground)] transition duration-300 group-hover:text-[color:var(--accent-strong)] ${isRecent ? "mt-2.5 truncate text-lg" : compact ? "mt-3 text-base" : "mt-3 text-lg"}`}
+          className={`font-serif leading-tight tracking-[-0.03em] text-[color:var(--foreground)] transition duration-300 group-hover:text-[color:var(--accent-strong)] ${isRecent ? "mt-3 truncate text-lg" : compact ? "mt-3 text-base" : "mt-3 text-lg"}`}
         >
           {entry.title}
         </h3>
 
         <p
-          className={`mt-2 text-[color:var(--muted)] ${isRecent ? "line-clamp-4 text-xs leading-[1.3rem]" : compact ? "line-clamp-2 text-xs" : "line-clamp-2 text-sm"}`}
+          className={`mt-2 text-[color:var(--muted)] ${isRecent ? "mt-3 min-h-[5.68rem] line-clamp-4 text-xs leading-[1.42rem]" : compact ? "line-clamp-2 text-xs" : "line-clamp-2 text-sm"}`}
         >
           {entry.excerpt || "Open this entry to read the full content."}
         </p>
 
         {isRecent ? (
-          <div className="mt-3 flex flex-wrap items-center gap-1.5 text-[0.68rem] leading-4 text-[color:var(--muted)]">
+          <div className="mt-auto flex flex-wrap items-center gap-1.5 pt-4 text-[0.68rem] leading-4 text-[color:var(--muted)]">
             {displayDate && (
               <span className="rounded-full bg-[color:var(--accent-soft)] px-2 py-0.5 text-[color:var(--accent-strong)]">
                 {displayDate}
