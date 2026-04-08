@@ -7,12 +7,13 @@
 ## Prerequisites
 
 [`taxonomy.md`](../taxonomy.md) -- needed to check for term drift.
+[`index.md`](../index.md) -- helps you inspect the current wiki layout.
 
 ---
 
 ## Checks
 
-1. **Term drift**: scan all frontmatter `tags`, compare against `taxonomy.md`, report unregistered tags and suspected variants
+1. **Terminology consistency**: scan page titles, headings, aliases, and frontmatter labels for obvious variants or duplicate concepts
 2. **Orphan pages**: pages in `pages/` not linked from any other file
 3. **Broken links**: `[[...]]` pointing to nonexistent files
 4. **Contradictions**: conflicting claims across interlinked pages

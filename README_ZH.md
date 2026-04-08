@@ -2,7 +2,7 @@
 
 [English](./README.md) | **[中文](./README_ZH.md)**
 
-一个由 LLM Agent 增量维护的个人知识 wiki。
+一个由 LLM Agent 维护的知识库模板。
 
 设计思想来自 [`llm-wiki.md`](./llm-wiki.md)：不是 RAG，而是把知识**编译**进一个持续演化的 markdown 知识库，交叉引用、综合、矛盾检查都预先做好，而不是每次查询时重新发现。
 
@@ -12,8 +12,8 @@
 
 1. Fork 本项目到自己的仓库，然后 clone 到本地
 2. 用任意 AI coding agent（Claude Code、Codex 等）打开该项目
-3. 试着把任意一篇文章丢给它，让 agent 进行 ingest
-4. 就这样，enjoy it。Agent 会自动读取 `AGENTS.md`，理解 wiki 结构，处理好一切：摘要、交叉引用、归档、索引
+3. 添加内容，并告诉 agent 需要 ingest 或 query 的内容
+4. Agent 会读取 `AGENTS.md`，理解 wiki 结构，处理好一切：摘要、交叉引用、归档、索引
 
 然后你可以按需开启 extension：
 - **web-reader**（强烈建议开启）：让 agent 直接从 URL 获取文章。告诉你的 agent "enable the web-reader extension" 即可
@@ -84,9 +84,9 @@ MyWiki/
 
 ### 定期维护
 
-- `lint`：让 agent 做一次健康检查（术语漂移、孤儿页、断链等）
+- `lint`：让 agent 做一次健康检查（术语一致性、孤儿页、断链等）
 - 直接改 `taxonomy.md` 来重组分类
-- 直接改 `AGENTS.md` 来调整工作流
+- 直接改 `AGENTS.md` 来调整工作流和仓库规则
 
 ---
 
@@ -94,7 +94,7 @@ MyWiki/
 
 **只需读 [`AGENTS.md`](./AGENTS.md)**。它是唯一需要在会话开始时加载的文件。
 
-AGENTS.md 包含核心规则，并会在需要时指引你读取工作流文档（`workflows/`）和扩展文档（`extensions/`）。不要预读所有文件。
+AGENTS.md 包含核心规则，并会在需要时指引你读取工作流文档（`workflows/`) 和扩展文档（`extensions/`）。不要预读所有文件。
 
 ---
 

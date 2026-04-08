@@ -2,7 +2,7 @@
 
 **[English](./README.md)** | [中文](./README_ZH.md)
 
-A personal knowledge base incrementally built and maintained by LLM agents.
+A knowledge-base template maintained by LLM agents.
 
 The design is described in [`llm-wiki.md`](./llm-wiki.md): instead of RAG, knowledge is **compiled** into a continuously evolving markdown wiki. Cross-referencing, synthesis, and contradiction checking are done upfront, not re-derived on every query.
 
@@ -12,8 +12,8 @@ The design is described in [`llm-wiki.md`](./llm-wiki.md): instead of RAG, knowl
 
 1. Fork this repository and clone it locally
 2. Open the project with any AI coding agent (Claude Code, Codex, etc.)
-3. Drop any article or document into the conversation and tell the agent to ingest it
-4. Enjoy. The agent reads `AGENTS.md`, understands the wiki structure, and handles everything: summarizing, cross-referencing, filing, and indexing
+3. Add content and tell the agent what to ingest or query
+4. The agent reads `AGENTS.md`, understands the wiki structure, and handles summarizing, cross-referencing, filing, and indexing
 
 You can then enable extensions as needed:
 - **web-reader** (strongly recommended): lets the agent fetch articles directly from URLs. Just tell your agent "enable the web-reader extension"
@@ -84,9 +84,9 @@ MyWiki/
 
 ### Periodic maintenance
 
-- `lint`: have the agent run a health check (term drift, orphan pages, broken links, etc.)
+- `lint`: have the agent run a health check (term consistency, orphan pages, broken links, etc.)
 - Edit `taxonomy.md` directly to reorganize categories
-- Edit `AGENTS.md` directly to adjust workflows
+- Edit `AGENTS.md` directly to adjust workflows and repository rules
 
 ---
 

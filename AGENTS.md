@@ -42,7 +42,7 @@
 
 ```yaml
 ---
-type: concept            # One of 7 types in taxonomy.md
+type: concept            # Semantic type used by the page
 title: Habit Formation
 aliases: [habit formation, Habit Loop]
 tags: [learning/behavioral-psychology]
@@ -83,7 +83,7 @@ updated: 2026-04-05                references:
                                    ---
 ```
 
-> `pages/` uses `type` (semantic type, governed by taxonomy). Other directories use `kind` (fixed field).
+> `pages/` uses `type` (semantic type). Other directories use `kind` (fixed field).
 
 ---
 
@@ -128,9 +128,9 @@ Format: `<type>: <short description>`
 | `ingest` | Ingest new source |
 | `query` | Backfill exploration results |
 | `lint` | Health check fixes |
+| `taxonomy` | Vocabulary maintenance |
 | `map` | Create/update MOC |
 | `refactor` | Split, merge, rename pages |
-| `taxonomy` | Vocabulary maintenance |
 | `meta` | AGENTS.md / README / scripts / control layer changes |
 
 **One ingest = one commit.** Do not split.

@@ -47,9 +47,9 @@ A single ingest may touch 5-15 pages:
 
 Add the current source link to the `sources` field of referenced pages.
 
-## Step 6: Tag/type registration
+## Step 6: Keep repository conventions consistent
 
-If a tag/type not in taxonomy is needed, **stop** and inform the user. After confirmation, write to `taxonomy.md`.
+If a tag/type not in taxonomy is needed, stop and inform the user. After confirmation, write to taxonomy.md.
 
 ## Step 7: Regenerate `index.md`
 
