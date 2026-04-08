@@ -35,6 +35,29 @@ const EDGE_COLOR = "rgba(120, 120, 108, 0.15)";
 const HIGHLIGHT_EDGE_COLOR = "rgba(120, 120, 108, 0.32)";
 const DIMMED_EDGE_COLOR = "rgba(120, 120, 108, 0.08)";
 const FOREGROUND_COLOR = "#2c2c24";
+const LOCAL_GRAPH_SETTINGS = {
+  autoCenter: true,
+  autoRescale: true,
+  defaultEdgeColor: EDGE_COLOR,
+  defaultNodeColor: DIRECTORY_COLORS.pages,
+  enableCameraPanning: false,
+  enableCameraRotation: false,
+  enableCameraZooming: false,
+  enableEdgeEvents: false,
+  hideEdgesOnMove: false,
+  hideLabelsOnMove: false,
+  labelColor: { color: FOREGROUND_COLOR },
+  labelFont: "serif",
+  labelRenderedSizeThreshold: 6,
+  labelSize: 12,
+  labelWeight: "500",
+  maxCameraRatio: 1,
+  minCameraRatio: 1,
+  renderEdgeLabels: false,
+  renderLabels: true,
+  stagePadding: 20,
+  zIndex: true,
+} as const;
 
 function hexToRgba(hex: string, alpha: number) {
   const normalized = hex.replace("#", "");
@@ -218,13 +241,9 @@ function GraphScene({ data, hoveredNode, setHoveredNode }: GraphSceneProps) {
       };
     });
 
+    // SigmaContainer tears down the renderer on unmount, so cleanup must not
+    // touch the instance again or React/Next strict re-mounts will crash it.
     sigma.refresh();
-
-    return () => {
-      sigma.setSetting("nodeReducer", null);
-      sigma.setSetting("edgeReducer", null);
-      sigma.refresh();
-    };
   }, [hoveredNode, sigma]);
 
   return null;
@@ -252,29 +271,7 @@ export function LocalGraph({ data }: LocalGraphProps) {
         <div className="h-[200px] w-full">
           <SigmaStage
             containerClassName="h-full w-full"
-            settings={{
-              autoCenter: true,
-              autoRescale: true,
-              defaultEdgeColor: EDGE_COLOR,
-              defaultNodeColor: DIRECTORY_COLORS.pages,
-              enableCameraPanning: false,
-              enableCameraRotation: false,
-              enableCameraZooming: false,
-              enableEdgeEvents: false,
-              hideEdgesOnMove: false,
-              hideLabelsOnMove: false,
-              labelColor: { color: FOREGROUND_COLOR },
-              labelFont: "serif",
-              labelRenderedSizeThreshold: 6,
-              labelSize: 12,
-              labelWeight: "500",
-              maxCameraRatio: 1,
-              minCameraRatio: 1,
-              renderEdgeLabels: false,
-              renderLabels: true,
-              stagePadding: 20,
-              zIndex: true,
-            }}
+            settings={LOCAL_GRAPH_SETTINGS}
             sigmaClassName="local-graph-sigma"
           >
             <GraphScene data={data} hoveredNode={hoveredNode} setHoveredNode={setHoveredNode} />

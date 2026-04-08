@@ -55,6 +55,27 @@ const EDGE_COLOR = "rgba(120, 120, 108, 0.15)";
 const HIGHLIGHT_EDGE_COLOR = "rgba(120, 120, 108, 0.32)";
 const DIMMED_EDGE_COLOR = "rgba(120, 120, 108, 0.06)";
 const FOREGROUND_COLOR = "#2c2c24";
+const GRAPH_VIEW_SETTINGS = {
+  autoCenter: true,
+  autoRescale: true,
+  defaultEdgeColor: EDGE_COLOR,
+  defaultNodeColor: DIRECTORY_COLORS.pages,
+  enableEdgeEvents: false,
+  hideEdgesOnMove: false,
+  hideLabelsOnMove: false,
+  labelColor: { color: FOREGROUND_COLOR },
+  labelDensity: 1.1,
+  labelFont: "serif",
+  labelRenderedSizeThreshold: 10,
+  labelSize: 14,
+  labelWeight: "500",
+  maxCameraRatio: 8,
+  minCameraRatio: 0.08,
+  renderEdgeLabels: false,
+  renderLabels: true,
+  stagePadding: 36,
+  zIndex: true,
+} as const;
 
 function hexToRgba(hex: string, alpha: number) {
   const normalized = hex.replace("#", "");
@@ -334,13 +355,9 @@ function GraphScene({ data, activeDirectories, hoveredNode, setHoveredNode }: Gr
       };
     });
 
+    // SigmaContainer tears down the renderer on unmount, so cleanup must not
+    // touch the instance again or React/Next strict re-mounts will crash it.
     sigma.refresh();
-
-    return () => {
-      sigma.setSetting("nodeReducer", null);
-      sigma.setSetting("edgeReducer", null);
-      sigma.refresh();
-    };
   }, [activeDirectories, hoveredNode, sigma]);
 
   return null;
@@ -428,27 +445,7 @@ export function GraphView({ data, stats }: GraphViewProps) {
             <div className="relative h-full w-full">
               <SigmaStage
                 containerClassName="h-full w-full"
-                settings={{
-                  autoCenter: true,
-                  autoRescale: true,
-                  defaultEdgeColor: EDGE_COLOR,
-                  defaultNodeColor: DIRECTORY_COLORS.pages,
-                  enableEdgeEvents: false,
-                  hideEdgesOnMove: false,
-                  hideLabelsOnMove: false,
-                  labelColor: { color: FOREGROUND_COLOR },
-                  labelDensity: 1.1,
-                  labelFont: "serif",
-                  labelRenderedSizeThreshold: 10,
-                  labelSize: 14,
-                  labelWeight: "500",
-                  minCameraRatio: 0.08,
-                  maxCameraRatio: 8,
-                  renderEdgeLabels: false,
-                  renderLabels: true,
-                  stagePadding: 36,
-                  zIndex: true,
-                }}
+                settings={GRAPH_VIEW_SETTINGS}
                 sigmaClassName="graph-sigma"
               >
                 <GraphScene
