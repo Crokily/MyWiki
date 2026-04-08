@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { BackLinksSidebar } from "@/components/BackLinks";
-import { LocalGraph } from "@/components/LocalGraph";
+import { LocalGraph } from "@/components/LocalGraphNoSSR";
 import { PageMetaSidebar } from "@/components/PageMeta";
 import { TableOfContents } from "@/components/TableOfContents";
 import { getBacklinks, getPageBySlug, getAllPages } from "@/lib/content";

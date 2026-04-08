@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { GraphView } from "@/components/GraphView";
+import { GraphView } from "@/components/GraphViewNoSSR";
 import { getGraphData, getGraphStats } from "@/lib/graph";
 
 export function generateMetadata(): Metadata {

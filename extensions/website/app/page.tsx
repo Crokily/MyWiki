@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { EntryCard } from "@/components/EntryCard";
-import { MiniGraph } from "@/components/MiniGraph";
+import { MiniGraph } from "@/components/MiniGraphNoSSR";
 import { getAllTags, getDirectoryCounts, getRecentPages, tagToHref } from "@/lib/content";
 import { getGraphData } from "@/lib/graph";
 import { DIRECTORY_LABELS } from "@/lib/site";
