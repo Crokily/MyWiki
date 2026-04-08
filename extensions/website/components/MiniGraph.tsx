@@ -1,11 +1,13 @@
 "use client";
 
 import Graph from "graphology";
-import { SigmaContainer, useLoadGraph, useRegisterEvents, useSigma } from "@react-sigma/core";
+import { useLoadGraph, useRegisterEvents, useSigma } from "@react-sigma/core";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
 import type { GraphData, GraphNode } from "@/lib/graph";
+import { resolveGraphPosition } from "@/lib/graph-position";
+import { SigmaStage } from "@/components/SigmaStage";
 
 interface MiniGraphProps {
   data: GraphData;
@@ -41,12 +43,13 @@ function hexToRgba(hex: string, alpha: number) {
 function createSigmaGraph(data: GraphData) {
   const graph = new Graph<GraphNode, SigmaEdgeAttributes>({ type: "undirected" });
 
-  for (const node of data.nodes) {
+  data.nodes.forEach((node, index) => {
     graph.addNode(node.slug, {
       ...node,
+      ...resolveGraphPosition(node.x, node.y, index, data.nodes.length),
       size: Math.max(2.8, Math.min(8, 1.4 + node.size * 0.28)),
     });
-  }
+  });
 
   for (const edge of data.edges) {
     if (!graph.hasNode(edge.source) || !graph.hasNode(edge.target) || graph.hasEdge(edge.source, edge.target)) {
@@ -123,6 +126,7 @@ function GraphScene({ data, hoveredNode, setHoveredNode }: GraphSceneProps) {
     sigma.setSetting("nodeReducer", (node, attributes) => {
       if (!hoveredNode) {
         return {
+          ...attributes,
           hidden: false,
           label: null,
         };
@@ -130,6 +134,7 @@ function GraphScene({ data, hoveredNode, setHoveredNode }: GraphSceneProps) {
 
       if (node === hoveredNode) {
         return {
+          ...attributes,
           hidden: false,
           color: attributes.color,
           size: attributes.size + 1.3,
@@ -140,6 +145,7 @@ function GraphScene({ data, hoveredNode, setHoveredNode }: GraphSceneProps) {
 
       if (neighborSet.has(node)) {
         return {
+          ...attributes,
           hidden: false,
           color: attributes.color,
           zIndex: 1,
@@ -147,6 +153,7 @@ function GraphScene({ data, hoveredNode, setHoveredNode }: GraphSceneProps) {
       }
 
       return {
+        ...attributes,
         hidden: false,
         color: hexToRgba(attributes.color, 0.55),
         label: null,
@@ -157,6 +164,7 @@ function GraphScene({ data, hoveredNode, setHoveredNode }: GraphSceneProps) {
     sigma.setSetting("edgeReducer", (edge, attributes) => {
       if (!hoveredNode) {
         return {
+          ...attributes,
           hidden: false,
           color: attributes.color,
           size: attributes.size,
@@ -168,6 +176,7 @@ function GraphScene({ data, hoveredNode, setHoveredNode }: GraphSceneProps) {
 
       if (isConnected) {
         return {
+          ...attributes,
           hidden: false,
           color: HIGHLIGHT_EDGE_COLOR,
           size: 0.9,
@@ -176,6 +185,7 @@ function GraphScene({ data, hoveredNode, setHoveredNode }: GraphSceneProps) {
       }
 
       return {
+        ...attributes,
         hidden: false,
         color: DIMMED_EDGE_COLOR,
         size: 0.5,
@@ -211,9 +221,8 @@ export function MiniGraph({ data }: MiniGraphProps) {
         <div className="relative h-[180px] w-full">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(193,140,93,0.08),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(93,112,82,0.1),transparent_38%)]" />
 
-          <SigmaContainer
-            className="mini-graph-sigma"
-            style={{ height: "100%", width: "100%" }}
+          <SigmaStage
+            containerClassName="h-full w-full"
             settings={{
               autoCenter: true,
               autoRescale: true,
@@ -238,9 +247,10 @@ export function MiniGraph({ data }: MiniGraphProps) {
               stagePadding: 24,
               zIndex: true,
             }}
+            sigmaClassName="mini-graph-sigma"
           >
             <GraphScene data={data} hoveredNode={hoveredNode} setHoveredNode={setHoveredNode} />
-          </SigmaContainer>
+          </SigmaStage>
 
           <div className="pointer-events-none absolute inset-x-3 bottom-3 flex justify-center">
             <span className="rounded-full border border-[color:var(--border)] bg-white/78 px-3 py-1 text-[0.68rem] font-medium tracking-[0.04em] text-[color:var(--muted)] shadow-[var(--shadow-soft)] backdrop-blur-sm">

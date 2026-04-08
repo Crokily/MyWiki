@@ -1,11 +1,13 @@
 "use client";
 
 import Graph from "graphology";
-import { SigmaContainer, useLoadGraph, useRegisterEvents, useSigma } from "@react-sigma/core";
+import { useLoadGraph, useRegisterEvents, useSigma } from "@react-sigma/core";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
 import type { GraphData, GraphNode } from "@/lib/graph";
+import { resolveGraphPosition } from "@/lib/graph-position";
+import { SigmaStage } from "@/components/SigmaStage";
 
 interface LocalGraphProps {
   data: GraphData;
@@ -48,13 +50,14 @@ function hexToRgba(hex: string, alpha: number) {
 function createSigmaGraph(data: GraphData) {
   const graph = new Graph<GraphNode, SigmaEdgeAttributes>({ type: "undirected" });
 
-  for (const node of data.nodes) {
+  data.nodes.forEach((node, index) => {
     graph.addNode(node.slug, {
       ...node,
+      ...resolveGraphPosition(node.x, node.y, index, data.nodes.length),
       color: DIRECTORY_COLORS[node.directory],
       size: node.isCenter ? 11 : 5.5,
     });
-  }
+  });
 
   for (const edge of data.edges) {
     if (!graph.hasNode(edge.source) || !graph.hasNode(edge.target) || graph.hasEdge(edge.source, edge.target)) {
@@ -133,6 +136,7 @@ function GraphScene({ data, hoveredNode, setHoveredNode }: GraphSceneProps) {
 
       if (!hoveredNode) {
         return {
+          ...attributes,
           hidden: false,
           forceLabel: isCenter,
           highlighted: isCenter,
@@ -142,6 +146,7 @@ function GraphScene({ data, hoveredNode, setHoveredNode }: GraphSceneProps) {
 
       if (node === hoveredNode) {
         return {
+          ...attributes,
           hidden: false,
           color: attributes.color,
           size: attributes.size + 1.8,
@@ -153,6 +158,7 @@ function GraphScene({ data, hoveredNode, setHoveredNode }: GraphSceneProps) {
 
       if (isCenter) {
         return {
+          ...attributes,
           hidden: false,
           color: neighborSet.has(node) ? attributes.color : hexToRgba(attributes.color, 0.95),
           forceLabel: true,
@@ -163,6 +169,7 @@ function GraphScene({ data, hoveredNode, setHoveredNode }: GraphSceneProps) {
 
       if (neighborSet.has(node)) {
         return {
+          ...attributes,
           hidden: false,
           color: attributes.color,
           highlighted: true,
@@ -171,6 +178,7 @@ function GraphScene({ data, hoveredNode, setHoveredNode }: GraphSceneProps) {
       }
 
       return {
+        ...attributes,
         hidden: false,
         color: hexToRgba(attributes.color, 0.18),
         label: null,
@@ -182,6 +190,7 @@ function GraphScene({ data, hoveredNode, setHoveredNode }: GraphSceneProps) {
     sigma.setSetting("edgeReducer", (edge, attributes) => {
       if (!hoveredNode) {
         return {
+          ...attributes,
           hidden: false,
           color: attributes.color,
           size: attributes.size,
@@ -193,6 +202,7 @@ function GraphScene({ data, hoveredNode, setHoveredNode }: GraphSceneProps) {
 
       if (isConnected) {
         return {
+          ...attributes,
           hidden: false,
           color: HIGHLIGHT_EDGE_COLOR,
           size: 1.2,
@@ -201,6 +211,7 @@ function GraphScene({ data, hoveredNode, setHoveredNode }: GraphSceneProps) {
       }
 
       return {
+        ...attributes,
         hidden: false,
         color: DIMMED_EDGE_COLOR,
         size: 0.7,
@@ -239,9 +250,8 @@ export function LocalGraph({ data }: LocalGraphProps) {
     <>
       <div className="overflow-hidden rounded-[1.5rem] border border-[color:var(--border)] bg-[color:var(--surface-card)]">
         <div className="h-[200px] w-full">
-          <SigmaContainer
-            className="local-graph-sigma"
-            style={{ height: "100%", width: "100%" }}
+          <SigmaStage
+            containerClassName="h-full w-full"
             settings={{
               autoCenter: true,
               autoRescale: true,
@@ -265,9 +275,10 @@ export function LocalGraph({ data }: LocalGraphProps) {
               stagePadding: 20,
               zIndex: true,
             }}
+            sigmaClassName="local-graph-sigma"
           >
             <GraphScene data={data} hoveredNode={hoveredNode} setHoveredNode={setHoveredNode} />
-          </SigmaContainer>
+          </SigmaStage>
         </div>
       </div>
 

@@ -117,6 +117,28 @@ function countComponents(graph: WikiGraph) {
   return components;
 }
 
+function assignFallbackPositions(graph: WikiGraph) {
+  const slugs = graph.nodes();
+  const nodeCount = Math.max(slugs.length, 1);
+  const radius = Math.max(24, nodeCount * 6);
+
+  slugs.forEach((slug, index) => {
+    const x = graph.getNodeAttribute(slug, "x");
+    const y = graph.getNodeAttribute(slug, "y");
+
+    if (Number.isFinite(x) && Number.isFinite(y)) {
+      return;
+    }
+
+    const angle = (index / nodeCount) * Math.PI * 2;
+
+    graph.mergeNodeAttributes(slug, {
+      x: Math.cos(angle) * radius,
+      y: Math.sin(angle) * radius,
+    });
+  });
+}
+
 function buildGraphState(): GraphState {
   const entries = getAllPages();
   const graph = new Graph<GraphNode, GraphEdgeAttributes>({ type: "undirected" });
@@ -147,6 +169,8 @@ function buildGraphState(): GraphState {
       settings: forceAtlas2.inferSettings(graph),
     });
   }
+
+  assignFallbackPositions(graph);
 
   const nodes: GraphNode[] = [];
   const edges: GraphEdge[] = [];

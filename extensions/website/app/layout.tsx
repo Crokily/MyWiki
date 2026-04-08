@@ -34,6 +34,11 @@ export const metadata: Metadata = {
     template: "%s | MyWiki",
   },
   description: "A personal knowledge base incrementally maintained by LLM agents",
+  icons: {
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
+    apple: "/favicon.svg",
+  },
 };
 
 export const viewport: Viewport = {
