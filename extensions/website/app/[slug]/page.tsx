@@ -3,9 +3,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { BackLinksSidebar } from "@/components/BackLinks";
+import { LocalGraph } from "@/components/LocalGraph";
 import { PageMetaSidebar } from "@/components/PageMeta";
 import { TableOfContents } from "@/components/TableOfContents";
 import { getBacklinks, getPageBySlug, getAllPages } from "@/lib/content";
+import { getLocalGraph } from "@/lib/graph";
 import { renderMarkdown, extractHeadings } from "@/lib/markdown";
 import { DIRECTORY_LABELS, formatDate } from "@/lib/site";
 
@@ -48,6 +50,7 @@ export default async function WikiPage({ params }: WikiPageProps) {
   const html = await renderMarkdown(page.body);
   const headings = extractHeadings(html);
   const backlinks = getBacklinks(page.slug);
+  const localGraph = getLocalGraph(page.slug);
   const { classification } = page;
   const primaryDate =
     page.frontmatter.updated ||
@@ -86,6 +89,14 @@ export default async function WikiPage({ params }: WikiPageProps) {
 
         {/* Mobile-only meta & backlinks (shown below article on small screens) */}
         <div className="space-y-5 lg:hidden">
+          {localGraph.nodes.length > 1 && (
+            <section className="surface rounded-[2rem] px-4 py-5">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">Local Graph</p>
+              <div className="mt-3">
+                <LocalGraph data={localGraph} />
+              </div>
+            </section>
+          )}
           <section className="surface rounded-[2rem] px-5 py-5">
             <PageMetaSidebar page={page} />
           </section>
@@ -100,6 +111,15 @@ export default async function WikiPage({ params }: WikiPageProps) {
       {/* ── Sidebar ── */}
       <aside className="hidden lg:block">
         <div className="sticky top-24 space-y-5">
+          {localGraph.nodes.length > 1 && (
+            <section className="surface rounded-[2rem] px-4 py-5">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">Local Graph</p>
+              <div className="mt-3">
+                <LocalGraph data={localGraph} />
+              </div>
+            </section>
+          )}
+
           {/* Table of Contents */}
           {headings.length > 0 && (
             <section className="surface rounded-[2rem] px-4 py-5">
