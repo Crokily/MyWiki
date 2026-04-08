@@ -1,146 +1,146 @@
-# Taxonomy — 受控词表
+# Taxonomy
 
-本 wiki 的**术语标准**。所有 frontmatter 的 `type` 和 `tags` 都必须来自本文件。
+The **controlled vocabulary** for this wiki. All frontmatter `type` and `tags` values must come from this file.
 
-> ⚠️ **LLM**：创建或更新任何页面 frontmatter 前，**必须**先读本文件。新增词汇时走第 5 节的维护流程。
-> 本文件随 wiki 共同演化——它是活的。每次新增都是一次 commit（`taxonomy: ...`）。
+> **LLM**: Before creating or updating any page frontmatter, you **must** read this file first. When adding new terms, follow the maintenance procedures in section 5.
+> This file co-evolves with the wiki. Each addition is a commit (`taxonomy: ...`).
 
 ---
 
-## 1. `type` 枚举（仅用于 `pages/`）
+## 1. `type` enum (pages/ only)
 
-`pages/` 里的每个文件**必须**有 `type` 字段，取值**只能**是下表之一：
+Every file in `pages/` **must** have a `type` field with a value from this table:
 
-| type | 定义 | 典型例子 |
+| type | Definition | Examples |
 |---|---|---|
-| `entity` | 具体可指的事物：组织、地点、作品、产品（人除外） | `rust-foundation`, `mit` |
-| `person` | 人物 | `james-clear`, `linus-torvalds` |
-| `concept` | 抽象概念、理论、方法、原则 | `habit-formation`, `memory-safety` |
-| `topic` | 主题综合页，串起多个 concept/entity | `personal-productivity`, `systems-programming` |
-| `tool` | 软件、工具、服务、库 | `obsidian`, `qmd`, `neovim` |
-| `book` | 书籍 | `atomic-habits` |
-| `note` | 个人笔记、日记、反思、计划 | `2026-q2-goals`, `diet-log` |
+| `entity` | A concrete, referable thing: org, place, work, product (not a person) | `rust-foundation`, `mit` |
+| `person` | A person | `james-clear`, `linus-torvalds` |
+| `concept` | Abstract concept, theory, method, principle | `habit-formation`, `memory-safety` |
+| `topic` | Synthesis page linking multiple concepts/entities | `personal-productivity`, `systems-programming` |
+| `tool` | Software, tool, service, library | `obsidian`, `qmd`, `neovim` |
+| `book` | Book | `atomic-habits` |
+| `note` | Personal note, journal, reflection, plan | `2026-q2-goals`, `diet-log` |
 
-**其他目录不用 `type`**：
-- `sources/` 用 `kind: source`
-- `maps/` 用 `kind: map`
-- `queries/` 用 `kind: query`
+**Other directories do not use `type`**:
+- `sources/` uses `kind: source`
+- `maps/` uses `kind: map`
+- `queries/` uses `kind: query`
 
-**不可自创新 type**。确有必要时 LLM 向用户提议，用户批准后写入本表。
-
----
-
-## 2. `tags` 层级受控词表
-
-### 格式规则
-
-- **小写**，例 `rust` 不是 `Rust`
-- 单词间用 **连字符** `-`，例 `behavioral-psychology`
-- 层级用 **斜杠** `/`，例 `tech/rust`
-- **最多 3 层**：`tech/lang/rust` 可以，`tech/lang/systems/rust` 不行
-- 一级前缀必须从下方已登记列表中选
-
-### 已登记 tags
-
-> 初始只列几个示范条目。真正的词表会随 ingest 增长。LLM 新增时按第 5 节流程。
-
-#### `tech/` — 科技、工程、计算机
-
-- `tech/rust` — Rust 编程语言
-  - 禁用变体：`Rust`, `rust-lang`, `rustlang`
-- `tech/javascript` — JavaScript 语言
-  - 禁用变体：`JS`, `js`, `javaScript`, `ecmascript`
-- `tech/ai` — 人工智能（广义）
-  - 禁用变体：`AI`, `人工智能`, `artificial-intelligence`
-- `tech/llm` — 大语言模型
-  - 禁用变体：`LLM`, `大模型`, `大语言模型`, `large-language-model`
-- `tech/agent` — AI 智能体、agent harness、agentic 系统（含 coding agent）
-  - 禁用变体：`agent`, `Agent`, `agentic`, `ai-agent`, `AI-Agent`, `智能体`, `agent-harness`
-
-#### `learning/` — 学习方法、学习资料、教育
-
-_(待填充)_
-
-#### `life/` — 生活知识、健康、日常
-
-_(待填充)_
-
-#### `personal/` — 个人记录、目标、反思
-
-- `personal/goals` — 目标与计划
-- `personal/journal` — 日记与反思
-
-#### `meta/` — 关于 wiki 本身的笔记
-
-- `meta/workflow` — 工作流设计、工具使用
+**Do not self-create new types.** If genuinely needed, the LLM proposes to the user; upon approval, add to this table.
 
 ---
 
-## 3. `aliases` 字段约定
+## 2. `tags` hierarchical controlled vocabulary
 
-`aliases` 是给 Obsidian 全文搜索和 `[[...]]` 自动补全用的。放：
+### Format rules
 
-- **中文名**（当文件名是英文 slug 时）
-- **常见缩写**（JS、AI、LLM，作为别名可以，但 **tag 必须用全称**）
-- **常见异写**（`JavaScript` / `Javascript` / `Java Script`）
-- **人物的其他称呼、笔名**
+- **Lowercase**, e.g. `rust` not `Rust`
+- Words separated by **hyphens** `-`, e.g. `behavioral-psychology`
+- Hierarchy uses **slashes** `/`, e.g. `tech/rust`
+- **Maximum 3 levels**: `tech/lang/rust` is fine, `tech/lang/systems/rust` is not
+- Top-level prefix must be from the registered list below
 
-**示例**：
+### Registered tags
+
+> Initially only a few example entries. The vocabulary grows with ingests. LLM follows section 5 procedures when adding.
+
+#### `tech/` -- technology, engineering, computing
+
+- `tech/rust` -- Rust programming language
+  - Banned variants: `Rust`, `rust-lang`, `rustlang`
+- `tech/javascript` -- JavaScript language
+  - Banned variants: `JS`, `js`, `javaScript`, `ecmascript`
+- `tech/ai` -- artificial intelligence (broad)
+  - Banned variants: `AI`, `artificial-intelligence`
+- `tech/llm` -- large language models
+  - Banned variants: `LLM`, `large-language-model`
+- `tech/agent` -- AI agents, agent harnesses, agentic systems (including coding agents)
+  - Banned variants: `agent`, `Agent`, `agentic`, `ai-agent`, `AI-Agent`, `agent-harness`
+
+#### `learning/` -- learning methods, materials, education
+
+_(to be populated)_
+
+#### `life/` -- life knowledge, health, daily
+
+_(to be populated)_
+
+#### `personal/` -- personal records, goals, reflections
+
+- `personal/goals` -- goals and plans
+- `personal/journal` -- journals and reflections
+
+#### `meta/` -- notes about the wiki itself
+
+- `meta/workflow` -- workflow design, tool usage
+
+---
+
+## 3. `aliases` field conventions
+
+`aliases` is used for Obsidian full-text search and `[[...]]` auto-completion. Include:
+
+- **Alternative language names** (when the filename is an English slug)
+- **Common abbreviations** (JS, AI, LLM may appear as aliases, but **tags must use the full form**)
+- **Common misspellings** (`JavaScript` / `Javascript` / `Java Script`)
+- **Alternative names, pen names for people**
+
+**Example**:
 
 ```yaml
 # pages/javascript.md
-aliases: [JavaScript, JS, js, JavaScript 语言, ECMAScript]
+aliases: [JavaScript, JS, js, ECMAScript]
 ```
 
-注意这里 `JS` 可以出现在 `aliases` 里，但**绝不**能出现在 `tags` 里。
+Note that `JS` may appear in `aliases`, but **never** in `tags`.
 
 ---
 
-## 4. 文件名 Slug 规则
+## 4. Filename slug rules
 
-| 目录 | 规则 | 例子 |
+| Directory | Rule | Examples |
 |---|---|---|
-| `raw/` | `YYYY-MM-DD-slug.<ext>`（任意扩展名） | `2026-04-05-atomic-habits-ch1.md`, `2026-04-10-paper.pdf`, `2026-04-11-talk.webp` |
-| `sources/` | 同 `raw/`（basename 一致，**总是 .md**） | `2026-04-05-atomic-habits-ch1.md`（即使 raw 是 .pdf） |
-| `pages/` | `english-slug.md`，**不带日期** | `habit-formation.md` |
-| `maps/` | `english-slug.md`，**不带日期** | `tech-landscape.md` |
+| `raw/` | `YYYY-MM-DD-slug.<ext>` (any extension) | `2026-04-05-atomic-habits-ch1.md`, `2026-04-10-paper.pdf`, `2026-04-11-talk.webp` |
+| `sources/` | Same as `raw/` (matching basename, **always .md**) | `2026-04-05-atomic-habits-ch1.md` (even if raw is .pdf) |
+| `pages/` | `english-slug.md`, **no date prefix** | `habit-formation.md` |
+| `maps/` | `english-slug.md`, **no date prefix** | `tech-landscape.md` |
 | `queries/` | `YYYY-MM-DD-slug.md` | `2026-04-05-rust-vs-zig-memory.md` |
 
-**全局唯一**：任何两个文件的 basename（去掉扩展名）不能相同，跨目录也不行。因为我们用 `[[slug]]` 短链接。例如 `raw/2026-04-10-paper.pdf` 和 `sources/2026-04-10-paper.md` 是合法的 1:1 配对，但不能再有 `raw/2026-04-10-paper.docx`。
+**Globally unique**: No two files may share the same basename (without extension), even across directories. We use `[[slug]]` short links. For example, `raw/2026-04-10-paper.pdf` and `sources/2026-04-10-paper.md` are a valid 1:1 pair, but there cannot also be `raw/2026-04-10-paper.docx`.
 
-Slug 本身的规则：
-- 英文小写
-- 单词间连字符 `-`
-- 无空格、无下划线、无大写
-- 保持简洁但有意义（`rust` 比 `rust-programming-language` 好）
+Slug rules:
+- English lowercase
+- Words separated by hyphens `-`
+- No spaces, no underscores, no uppercase
+- Keep it concise but meaningful (`rust` is better than `rust-programming-language`)
 
 ---
 
-## 5. 维护流程
+## 5. Maintenance procedures
 
-### 5.1 新增 tag
+### 5.1 Adding a new tag
 
-1. 确认已有 tag 都不合适
-2. 查「禁用变体」列表确认不是已有 tag 的异写
-3. 在对应一级前缀下新增一行，写清**定义**
-4. 列出你能想到的所有**禁用变体**
-5. 在 **同一个 commit** 内同时：
-   - 修改 `taxonomy.md`
-   - 应用新 tag 的页面
-6. commit message：`taxonomy: add tech/xxx`
+1. Confirm no existing tag fits
+2. Check the "banned variants" list to ensure it is not an alternate spelling of an existing tag
+3. Add a new entry under the appropriate top-level prefix with a clear **definition**
+4. List all **banned variants** you can think of
+5. In the **same commit**:
+   - Update `taxonomy.md`
+   - Apply the new tag to relevant pages
+6. Commit message: `taxonomy: add tech/xxx`
 
-### 5.2 修复术语漂移（lint 发现或人工发现）
+### 5.2 Fixing term drift (found by lint or manually)
 
-1. 选一个规范形式（优先已登记的）
-2. 把其他变体加入「禁用变体」列表
-3. 全局替换（`rg -l "tag: xxx" | xargs sed -i ...` 或手工）
-4. 在 `log.md` 记录此次规范化
-5. commit：`taxonomy: normalize xxx -> yyy`
+1. Choose a canonical form (prefer the registered one)
+2. Add other variants to the "banned variants" list
+3. Global replace (`rg -l "tag: xxx" | xargs sed -i ...` or manually)
+4. Record the normalization in `log.md`
+5. Commit: `taxonomy: normalize xxx -> yyy`
 
-### 5.3 新增 `type`
+### 5.3 Adding a new `type`
 
-**需要用户明确批准**。LLM 提议 → 用户同意 → 写入本表 → commit。
+**Requires explicit user approval.** LLM proposes, user agrees, write to this table, commit.
 
-### 5.4 新增一级 tag 前缀（如 `tech/` `life/` 之外的）
+### 5.4 Adding a new top-level tag prefix (beyond `tech/` `life/` etc.)
 
-同样需要用户批准。新前缀会影响整体分类观感，不要轻易增加。
+Also requires user approval. A new prefix affects the overall categorization. Do not add lightly.
