@@ -43,7 +43,7 @@ export function PageMetaSidebar({ page }: PageMetaProps) {
     <div className="space-y-5">
       {/* Classification & Directory */}
       <div>
-        <p className="text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">Info</p>
+        <p className="text-sm font-semibold uppercase tracking-[0.12em] text-[color:var(--foreground)]">Info</p>
         <div className="mt-3 space-y-2 text-sm">
           <div className="flex items-center justify-between gap-2">
             <span className="text-[color:var(--muted)]">Type</span>
@@ -62,7 +62,7 @@ export function PageMetaSidebar({ page }: PageMetaProps) {
       {/* Tags */}
       {tags.length > 0 && (
         <div>
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">Tags</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.12em] text-[color:var(--foreground)]">Tags</p>
           <div className="mt-3 flex flex-wrap gap-1.5">
             {tags.map((tag) => (
               <Link
@@ -80,7 +80,7 @@ export function PageMetaSidebar({ page }: PageMetaProps) {
       {/* Sources */}
       {sourceLinks.length > 0 && (
         <div>
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">Sources</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.12em] text-[color:var(--foreground)]">Sources</p>
           <div className="mt-3 space-y-1.5">
             {sourceLinks.map((src) => (
               <div key={src} className="text-sm">{renderLinkLikeValue(src)}</div>
@@ -92,7 +92,7 @@ export function PageMetaSidebar({ page }: PageMetaProps) {
       {/* Touches */}
       {touches.length > 0 && (
         <div>
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">Related</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.12em] text-[color:var(--foreground)]">Related</p>
           <div className="mt-3 space-y-1.5">
             {touches.map((t) => (
               <div key={t} className="text-sm">{renderLinkLikeValue(t)}</div>
@@ -104,7 +104,7 @@ export function PageMetaSidebar({ page }: PageMetaProps) {
       {/* URL */}
       {typeof frontmatter.url === "string" && (
         <div>
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">Link</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.12em] text-[color:var(--foreground)]">Link</p>
           <a href={frontmatter.url} className="mt-2 block break-all text-sm text-[color:var(--accent-strong)] underline" target="_blank" rel="noreferrer">
             {frontmatter.url}
           </a>
@@ -114,7 +114,7 @@ export function PageMetaSidebar({ page }: PageMetaProps) {
       {/* Author */}
       {typeof frontmatter.author === "string" && (
         <div>
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">Author</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.12em] text-[color:var(--foreground)]">Author</p>
           <div className="mt-2 text-sm">{renderLinkLikeValue(frontmatter.author)}</div>
         </div>
       )}

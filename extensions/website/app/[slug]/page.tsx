@@ -61,47 +61,39 @@ export default async function WikiPage({ params }: WikiPageProps) {
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_16rem] xl:grid-cols-[minmax(0,1fr)_18rem]">
       {/* ── Main Column ── */}
       <div className="min-w-0 space-y-6">
-        {/* Article Header */}
-        <header className="surface overflow-hidden rounded-[2.5rem] px-5 py-6 sm:px-7 sm:py-8">
-          <div className="flex flex-wrap items-center gap-2 text-sm">
-            <Link href="/" className="text-[color:var(--muted)] transition hover:text-[color:var(--accent-strong)]">
-              Home
-            </Link>
-            <span className="text-[color:var(--muted)]">/</span>
-            <span className="pill-chip pill-chip-primary text-xs">{classification}</span>
-            <span className="pill-chip text-xs">{DIRECTORY_LABELS[page.directory]}</span>
-            {primaryDate && (
-              <span className="text-xs text-[color:var(--muted)]">{formatDate(primaryDate)}</span>
-            )}
-          </div>
-          <h1 className="mt-4 max-w-4xl font-serif text-4xl leading-[0.95] tracking-[-0.05em] text-[color:var(--foreground)] sm:text-5xl">
-            {page.title}
-          </h1>
-          {page.excerpt && (
-            <p className="mt-4 max-w-3xl text-base text-[color:var(--muted)]">{page.excerpt}</p>
+        {/* Breadcrumb + Date — inline, no card */}
+        <nav className="flex flex-wrap items-center gap-2 px-1 text-sm">
+          <Link href="/" className="text-[color:var(--muted)] transition hover:text-[color:var(--accent-strong)]">
+            Home
+          </Link>
+          <span className="text-[color:var(--muted)]">/</span>
+          <span className="pill-chip pill-chip-primary text-xs">{classification}</span>
+          <span className="pill-chip text-xs">{DIRECTORY_LABELS[page.directory]}</span>
+          {primaryDate && (
+            <span className="text-xs text-[color:var(--muted)]">{formatDate(primaryDate)}</span>
           )}
-        </header>
+        </nav>
 
         {/* Article Body */}
-        <article className="surface rounded-[2.5rem] px-5 py-6 sm:px-7 sm:py-8">
+        <article className="surface rounded-xl px-5 py-6 sm:px-7 sm:py-8">
           <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: html }} />
         </article>
 
         {/* Mobile-only meta & backlinks (shown below article on small screens) */}
         <div className="space-y-5 lg:hidden">
           {localGraph.nodes.length > 1 && (
-            <section className="surface rounded-[2rem] px-4 py-5">
-              <p className="text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">Local Graph</p>
+            <section className="surface rounded-xl px-4 py-5">
+              <p className="text-sm font-semibold uppercase tracking-[0.12em] text-[color:var(--foreground)]">Local Graph</p>
               <div className="mt-3">
                 <LocalGraph data={localGraph} />
               </div>
             </section>
           )}
-          <section className="surface rounded-[2rem] px-5 py-5">
+          <section className="surface rounded-xl px-5 py-5">
             <PageMetaSidebar page={page} />
           </section>
           {backlinks.length > 0 && (
-            <section className="surface rounded-[2rem] px-5 py-5">
+            <section className="surface rounded-xl px-5 py-5">
               <BackLinksSidebar pages={backlinks} />
             </section>
           )}
@@ -112,8 +104,8 @@ export default async function WikiPage({ params }: WikiPageProps) {
       <aside className="hidden lg:block">
         <div className="sticky top-24 space-y-5">
           {localGraph.nodes.length > 1 && (
-            <section className="surface rounded-[2rem] px-4 py-5">
-              <p className="text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">Local Graph</p>
+            <section className="surface rounded-xl px-4 py-5">
+              <p className="text-sm font-semibold uppercase tracking-[0.12em] text-[color:var(--foreground)]">Local Graph</p>
               <div className="mt-3">
                 <LocalGraph data={localGraph} />
               </div>
@@ -122,19 +114,19 @@ export default async function WikiPage({ params }: WikiPageProps) {
 
           {/* Table of Contents */}
           {headings.length > 0 && (
-            <section className="surface rounded-[2rem] px-4 py-5">
+            <section className="surface rounded-xl px-4 py-5">
               <TableOfContents headings={headings} />
             </section>
           )}
 
           {/* Page Meta */}
-          <section className="surface rounded-[2rem] px-4 py-5">
+          <section className="surface rounded-xl px-4 py-5">
             <PageMetaSidebar page={page} />
           </section>
 
           {/* Backlinks */}
           {backlinks.length > 0 && (
-            <section className="surface rounded-[2rem] px-4 py-5">
+            <section className="surface rounded-xl px-4 py-5">
               <BackLinksSidebar pages={backlinks} />
             </section>
           )}

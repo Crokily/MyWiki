@@ -27,7 +27,7 @@ export function SiteHeader({ entries }: SiteHeaderProps) {
 
   return (
     <header className="sticky top-4 z-50">
-      <div className="surface mx-auto flex max-w-7xl items-center gap-4 rounded-[2rem] px-4 py-3 sm:px-5">
+      <div className="surface mx-auto flex max-w-[96rem] items-center gap-4 rounded-2xl px-4 py-3 sm:px-5">
         <Link href="/" className="flex shrink-0 items-center gap-3">
           <span className="flex h-10 w-10 items-center justify-center rounded-[35%_65%_55%_45%_/_40%_35%_65%_60%] bg-[color:var(--accent)] font-serif text-lg font-semibold text-[color:var(--accent-contrast)] shadow-[var(--shadow-soft)]">
             M

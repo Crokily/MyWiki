@@ -11,7 +11,7 @@ export function BackLinksSidebar({ pages }: BackLinksProps) {
 
   return (
     <div>
-      <p className="text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">
+      <p className="text-sm font-semibold uppercase tracking-[0.12em] text-[color:var(--foreground)]">
         Backlinks
         <span className="ml-2 font-normal">{pages.length}</span>
       </p>

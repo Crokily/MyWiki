@@ -24,9 +24,9 @@ interface GraphSceneProps {
   setHoveredNode: (node: string | null) => void;
 }
 
-const EDGE_COLOR = "rgba(120, 120, 108, 0.12)";
-const HIGHLIGHT_EDGE_COLOR = "rgba(120, 120, 108, 0.24)";
-const DIMMED_EDGE_COLOR = "rgba(120, 120, 108, 0.05)";
+const EDGE_COLOR = "rgba(100, 100, 90, 0.25)";
+const HIGHLIGHT_EDGE_COLOR = "rgba(100, 100, 90, 0.42)";
+const DIMMED_EDGE_COLOR = "rgba(100, 100, 90, 0.08)";
 const FOREGROUND_COLOR = "#2c2c24";
 const MINI_GRAPH_SETTINGS = {
   autoCenter: true,
@@ -237,7 +237,7 @@ export function MiniGraph({ data }: MiniGraphProps) {
 
   return (
     <>
-      <div className="overflow-hidden rounded-[1.5rem] border border-[color:var(--border)] bg-[color:var(--surface-card)]">
+      <div className="overflow-hidden rounded-lg border border-[color:var(--border)] bg-[color:var(--surface-card)]">
         <div className="relative h-[180px] w-full">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(193,140,93,0.08),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(93,112,82,0.1),transparent_38%)]" />
 

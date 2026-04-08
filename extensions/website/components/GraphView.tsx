@@ -51,23 +51,43 @@ const DIRECTORY_COLORS: Record<DirectoryKey, string> = {
   queries: "#8b6ba0",
 };
 
-const EDGE_COLOR = "rgba(120, 120, 108, 0.15)";
-const HIGHLIGHT_EDGE_COLOR = "rgba(120, 120, 108, 0.32)";
-const DIMMED_EDGE_COLOR = "rgba(120, 120, 108, 0.06)";
+const EDGE_COLOR = "rgba(100, 100, 90, 0.35)";
+const HIGHLIGHT_EDGE_COLOR = "rgba(100, 100, 90, 0.55)";
+const DIMMED_EDGE_COLOR = "rgba(100, 100, 90, 0.1)";
 const FOREGROUND_COLOR = "#2c2c24";
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function drawLabelBelow(
+  context: CanvasRenderingContext2D,
+  data: { x: number; y: number; size: number; label: string | null; color: string },
+  settings: any,
+) {
+  if (!data.label) return;
+  const size = settings.labelSize ?? 13;
+  const font = settings.labelFont ?? "serif";
+  const weight = settings.labelWeight ?? "500";
+  const color = settings.labelColor?.color ?? FOREGROUND_COLOR;
+  context.fillStyle = color;
+  context.font = `${weight} ${size}px ${font}`;
+  context.textAlign = "center";
+  context.fillText(data.label, data.x, data.y + data.size + size + 3);
+  context.textAlign = "start";
+}
+
 const GRAPH_VIEW_SETTINGS = {
   autoCenter: true,
   autoRescale: true,
   defaultEdgeColor: EDGE_COLOR,
   defaultNodeColor: DIRECTORY_COLORS.pages,
+  defaultDrawNodeLabel: drawLabelBelow,
   enableEdgeEvents: false,
   hideEdgesOnMove: false,
   hideLabelsOnMove: false,
   labelColor: { color: FOREGROUND_COLOR },
-  labelDensity: 1.1,
+  labelDensity: 0.8,
   labelFont: "serif",
-  labelRenderedSizeThreshold: 10,
-  labelSize: 14,
+  labelRenderedSizeThreshold: 16,
+  labelSize: 13,
   labelWeight: "500",
   maxCameraRatio: 8,
   minCameraRatio: 0.08,
@@ -75,7 +95,7 @@ const GRAPH_VIEW_SETTINGS = {
   renderLabels: true,
   stagePadding: 36,
   zIndex: true,
-} as const;
+};
 
 function hexToRgba(hex: string, alpha: number) {
   const normalized = hex.replace("#", "");
@@ -114,8 +134,8 @@ function createSigmaGraph(data: GraphData) {
 
 function SidebarCard({ title, children }: SidebarCardProps) {
   return (
-    <section className="surface rounded-[2rem] px-4 py-5">
-      <p className="text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">{title}</p>
+    <section className="surface rounded-xl px-4 py-5">
+      <p className="text-sm font-semibold uppercase tracking-[0.12em] text-[color:var(--foreground)]">{title}</p>
       <div className="mt-4">{children}</div>
     </section>
   );
@@ -126,25 +146,25 @@ function SidebarPanels({ stats, directoryCounts, activeDirectories, onToggleDire
     <>
       <SidebarCard title="Graph Stats">
         <div className="grid grid-cols-2 gap-3">
-          <div className="rounded-[1.4rem] border border-[color:var(--border)] bg-[color:var(--surface-card)] px-3 py-3">
+          <div className="rounded-lg border border-[color:var(--border)] bg-[color:var(--surface-card)] px-3 py-3">
             <p className="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">Nodes</p>
             <p className="mt-2 font-serif text-2xl leading-none tracking-[-0.04em] text-[color:var(--foreground)]">
               {stats.nodeCount}
             </p>
           </div>
-          <div className="rounded-[1.4rem] border border-[color:var(--border)] bg-[color:var(--surface-card)] px-3 py-3">
+          <div className="rounded-lg border border-[color:var(--border)] bg-[color:var(--surface-card)] px-3 py-3">
             <p className="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">Edges</p>
             <p className="mt-2 font-serif text-2xl leading-none tracking-[-0.04em] text-[color:var(--foreground)]">
               {stats.edgeCount}
             </p>
           </div>
-          <div className="rounded-[1.4rem] border border-[color:var(--border)] bg-[color:var(--surface-card)] px-3 py-3">
+          <div className="rounded-lg border border-[color:var(--border)] bg-[color:var(--surface-card)] px-3 py-3">
             <p className="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">Avg Degree</p>
             <p className="mt-2 font-serif text-2xl leading-none tracking-[-0.04em] text-[color:var(--foreground)]">
               {stats.avgDegree.toFixed(1)}
             </p>
           </div>
-          <div className="rounded-[1.4rem] border border-[color:var(--border)] bg-[color:var(--surface-card)] px-3 py-3">
+          <div className="rounded-lg border border-[color:var(--border)] bg-[color:var(--surface-card)] px-3 py-3">
             <p className="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">Components</p>
             <p className="mt-2 font-serif text-2xl leading-none tracking-[-0.04em] text-[color:var(--foreground)]">
               {stats.components}
@@ -420,7 +440,7 @@ export function GraphView({ data, stats }: GraphViewProps) {
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_16rem] xl:grid-cols-[minmax(0,1fr)_18rem]">
         <div className="min-w-0">
           <section
-            className="surface relative overflow-hidden rounded-[2.5rem]"
+            className="surface relative overflow-hidden rounded-2xl"
             style={{ height: "calc(100vh - 10rem)", minHeight: "30rem" }}
           >
             <div className="pointer-events-none absolute inset-0">
@@ -428,7 +448,7 @@ export function GraphView({ data, stats }: GraphViewProps) {
               <div className="absolute bottom-2 right-4 h-64 w-64 rounded-[32%_68%_67%_33%_/_38%_35%_65%_62%] bg-[color:var(--accent-soft)] blur-3xl" />
             </div>
 
-            <div className="pointer-events-none absolute left-5 top-5 z-10 max-w-xs rounded-[1.6rem] border border-[color:var(--border)] bg-white/70 px-4 py-3 shadow-[var(--shadow-soft)] backdrop-blur-md">
+            <div className="pointer-events-none absolute left-5 top-5 z-10 max-w-xs rounded-xl border border-[color:var(--border)] bg-white/70 px-4 py-3 shadow-[var(--shadow-soft)] backdrop-blur-md">
               <p className="text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[color:var(--muted)]">Network View</p>
               <h1 className="mt-2 font-serif text-2xl leading-none tracking-[-0.04em] text-[color:var(--foreground)]">
                 Knowledge Graph

@@ -2,6 +2,7 @@
 
 import Graph from "graphology";
 import { useLoadGraph, useRegisterEvents, useSigma } from "@react-sigma/core";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
@@ -31,9 +32,9 @@ const DIRECTORY_COLORS = {
   queries: "#8b6ba0",
 } as const;
 
-const EDGE_COLOR = "rgba(120, 120, 108, 0.15)";
-const HIGHLIGHT_EDGE_COLOR = "rgba(120, 120, 108, 0.32)";
-const DIMMED_EDGE_COLOR = "rgba(120, 120, 108, 0.08)";
+const EDGE_COLOR = "rgba(100, 100, 90, 0.30)";
+const HIGHLIGHT_EDGE_COLOR = "rgba(100, 100, 90, 0.50)";
+const DIMMED_EDGE_COLOR = "rgba(100, 100, 90, 0.10)";
 const FOREGROUND_COLOR = "#2c2c24";
 const LOCAL_GRAPH_SETTINGS = {
   autoCenter: true,
@@ -267,7 +268,7 @@ export function LocalGraph({ data }: LocalGraphProps) {
 
   return (
     <>
-      <div className="overflow-hidden rounded-[1.5rem] border border-[color:var(--border)] bg-[color:var(--surface-card)]">
+      <div className="overflow-hidden rounded-lg border border-[color:var(--border)] bg-[color:var(--surface-card)]">
         <div className="h-[200px] w-full">
           <SigmaStage
             containerClassName="h-full w-full"
@@ -281,7 +282,9 @@ export function LocalGraph({ data }: LocalGraphProps) {
 
       <div className="mt-3 flex items-center justify-between gap-3 text-[0.72rem] text-[color:var(--muted)]">
         <span className="truncate">{activeLabel ?? "Immediate neighbors"}</span>
-        <span className="shrink-0">{Math.max(0, data.nodes.length - 1)} links</span>
+        <Link href="/graph/" className="shrink-0 transition hover:text-[color:var(--accent-strong)]">
+          {Math.max(0, data.nodes.length - 1)} links &rarr;
+        </Link>
       </div>
 
       <style jsx global>{`
