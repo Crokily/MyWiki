@@ -3,7 +3,7 @@
 import Graph from "graphology";
 import { useLoadGraph, useRegisterEvents, useSigma } from "@react-sigma/core";
 import { useRouter } from "next/navigation";
-import type { ReactNode } from "react";
+import type { Dispatch, ReactNode, SetStateAction } from "react";
 import { useEffect, useMemo, useState } from "react";
 
 import type { GraphData, GraphNode, GraphStats } from "@/lib/graph";
@@ -26,7 +26,9 @@ interface SigmaEdgeAttributes {
 interface GraphSceneProps {
   data: GraphData;
   activeDirectories: Record<DirectoryKey, boolean>;
+  cameraRatio: number;
   hoveredNode: string | null;
+  setCameraRatio: Dispatch<SetStateAction<number>>;
   setHoveredNode: (node: string | null) => void;
 }
 
@@ -51,10 +53,11 @@ const DIRECTORY_COLORS: Record<DirectoryKey, string> = {
   queries: "#8b6ba0",
 };
 
-const EDGE_COLOR = "rgba(100, 100, 90, 0.35)";
-const HIGHLIGHT_EDGE_COLOR = "rgba(100, 100, 90, 0.55)";
-const DIMMED_EDGE_COLOR = "rgba(100, 100, 90, 0.1)";
 const FOREGROUND_COLOR = "#2c2c24";
+const EDGE_COLOR = hexToRgba(FOREGROUND_COLOR, 0.44);
+const HIGHLIGHT_EDGE_COLOR = hexToRgba(DIRECTORY_COLORS.pages, 0.72);
+const DIMMED_EDGE_COLOR = hexToRgba(FOREGROUND_COLOR, 0.18);
+const LABEL_VISIBILITY_CAMERA_RATIO = 0.82;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function drawLabelBelow(
@@ -125,7 +128,7 @@ function createSigmaGraph(data: GraphData) {
 
     graph.addEdge(edge.source, edge.target, {
       color: EDGE_COLOR,
-      size: 1,
+      size: 1.1,
     });
   }
 
@@ -216,7 +219,7 @@ function SidebarPanels({ stats, directoryCounts, activeDirectories, onToggleDire
   );
 }
 
-function GraphScene({ data, activeDirectories, hoveredNode, setHoveredNode }: GraphSceneProps) {
+function GraphScene({ data, activeDirectories, cameraRatio, hoveredNode, setCameraRatio, setHoveredNode }: GraphSceneProps) {
   const loadGraph = useLoadGraph<GraphNode, SigmaEdgeAttributes>();
   const registerEvents = useRegisterEvents<GraphNode, SigmaEdgeAttributes>();
   const sigma = useSigma<GraphNode, SigmaEdgeAttributes>();
@@ -227,7 +230,14 @@ function GraphScene({ data, activeDirectories, hoveredNode, setHoveredNode }: Gr
 
   useEffect(() => {
     loadGraph(sigmaGraph);
-  }, [loadGraph, sigmaGraph]);
+    const frameId = requestAnimationFrame(() => {
+      setCameraRatio(sigma.getCamera().getState().ratio);
+    });
+
+    return () => {
+      cancelAnimationFrame(frameId);
+    };
+  }, [loadGraph, setCameraRatio, sigma, sigmaGraph]);
 
   useEffect(() => {
     const container = sigma.getContainer();
@@ -240,6 +250,11 @@ function GraphScene({ data, activeDirectories, hoveredNode, setHoveredNode }: Gr
 
   useEffect(() => {
     registerEvents({
+      updated: () => {
+        const nextRatio = sigma.getCamera().getState().ratio;
+
+        setCameraRatio((current) => (Math.abs(current - nextRatio) < 0.001 ? current : nextRatio));
+      },
       enterNode: ({ node }) => {
         setHoveredNode(node);
         sigma.getContainer().style.cursor = "pointer";
@@ -261,7 +276,7 @@ function GraphScene({ data, activeDirectories, hoveredNode, setHoveredNode }: Gr
         sigma.getContainer().style.cursor = "grab";
       },
     });
-  }, [nodeLookup, registerEvents, router, setHoveredNode, sigma]);
+  }, [nodeLookup, registerEvents, router, setCameraRatio, setHoveredNode, sigma]);
 
   useEffect(() => {
     const graph = sigma.getGraph();
@@ -274,6 +289,7 @@ function GraphScene({ data, activeDirectories, hoveredNode, setHoveredNode }: Gr
         ? (graph.getNodeAttribute(hoveredNode, "directory") as DirectoryKey)
         : null;
     const shouldHighlight = hoveredNode !== null && hoveredDirectory !== null && activeDirectorySet.has(hoveredDirectory);
+    const showOverviewLabels = cameraRatio <= LABEL_VISIBILITY_CAMERA_RATIO;
 
     const neighborSet = new Set<string>();
 
@@ -302,7 +318,8 @@ function GraphScene({ data, activeDirectories, hoveredNode, setHoveredNode }: Gr
         return {
           ...attributes,
           hidden: false,
-          forceLabel: attributes.size >= 12,
+          forceLabel: showOverviewLabels && attributes.size >= 12,
+          label: showOverviewLabels ? attributes.label : null,
         };
       }
 
@@ -378,13 +395,14 @@ function GraphScene({ data, activeDirectories, hoveredNode, setHoveredNode }: Gr
     // SigmaContainer tears down the renderer on unmount, so cleanup must not
     // touch the instance again or React/Next strict re-mounts will crash it.
     sigma.refresh();
-  }, [activeDirectories, hoveredNode, sigma]);
+  }, [activeDirectories, cameraRatio, hoveredNode, sigma]);
 
   return null;
 }
 
 export function GraphView({ data, stats }: GraphViewProps) {
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
+  const [cameraRatio, setCameraRatio] = useState(1);
   const [activeDirectories, setActiveDirectories] = useState<Record<DirectoryKey, boolean>>({
     pages: true,
     sources: true,
@@ -440,7 +458,7 @@ export function GraphView({ data, stats }: GraphViewProps) {
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_16rem] xl:grid-cols-[minmax(0,1fr)_18rem]">
         <div className="min-w-0">
           <section
-            className="surface relative overflow-hidden rounded-2xl"
+            className="surface surface-asymmetric relative overflow-hidden"
             style={{ height: "calc(100vh - 10rem)", minHeight: "30rem" }}
           >
             <div className="pointer-events-none absolute inset-0">
@@ -471,7 +489,9 @@ export function GraphView({ data, stats }: GraphViewProps) {
                 <GraphScene
                   data={data}
                   activeDirectories={activeDirectories}
+                  cameraRatio={cameraRatio}
                   hoveredNode={hoveredNode}
+                  setCameraRatio={setCameraRatio}
                   setHoveredNode={setHoveredNode}
                 />
               </SigmaStage>

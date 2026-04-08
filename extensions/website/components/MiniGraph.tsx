@@ -2,8 +2,9 @@
 
 import Graph from "graphology";
 import { useLoadGraph, useRegisterEvents, useSigma } from "@react-sigma/core";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import type { GraphData, GraphNode } from "@/lib/graph";
 import { resolveGraphPosition } from "@/lib/graph-position";
@@ -24,18 +25,18 @@ interface GraphSceneProps {
   setHoveredNode: (node: string | null) => void;
 }
 
-const EDGE_COLOR = "rgba(100, 100, 90, 0.25)";
-const HIGHLIGHT_EDGE_COLOR = "rgba(100, 100, 90, 0.42)";
-const DIMMED_EDGE_COLOR = "rgba(100, 100, 90, 0.08)";
 const FOREGROUND_COLOR = "#2c2c24";
+const EDGE_COLOR = hexToRgba(FOREGROUND_COLOR, 0.36);
+const HIGHLIGHT_EDGE_COLOR = hexToRgba("#5d7052", 0.68);
+const DIMMED_EDGE_COLOR = hexToRgba(FOREGROUND_COLOR, 0.18);
 const MINI_GRAPH_SETTINGS = {
   autoCenter: true,
   autoRescale: true,
   defaultEdgeColor: EDGE_COLOR,
   defaultNodeColor: "#5d7052",
-  enableCameraPanning: false,
+  enableCameraPanning: true,
   enableCameraRotation: false,
-  enableCameraZooming: false,
+  enableCameraZooming: true,
   enableEdgeEvents: false,
   hideEdgesOnMove: false,
   hideLabelsOnMove: false,
@@ -45,8 +46,8 @@ const MINI_GRAPH_SETTINGS = {
   labelRenderedSizeThreshold: 999,
   labelSize: 11,
   labelWeight: "500",
-  maxCameraRatio: 1,
-  minCameraRatio: 1,
+  maxCameraRatio: 2.6,
+  minCameraRatio: 0.45,
   renderEdgeLabels: false,
   renderLabels: true,
   stagePadding: 24,
@@ -94,30 +95,49 @@ function GraphScene({ data, hoveredNode, setHoveredNode }: GraphSceneProps) {
   const registerEvents = useRegisterEvents<GraphNode, SigmaEdgeAttributes>();
   const sigma = useSigma<GraphNode, SigmaEdgeAttributes>();
   const router = useRouter();
+  const hoveredNodeRef = useRef<string | null>(null);
+  const isPointerDownRef = useRef(false);
 
   const sigmaGraph = useMemo(() => createSigmaGraph(data), [data]);
   const nodeLookup = useMemo(() => new Map(data.nodes.map((node) => [node.slug, node] as const)), [data.nodes]);
+
+  const syncCursor = () => {
+    const container = sigma.getContainer();
+
+    container.style.cursor = isPointerDownRef.current ? "grabbing" : hoveredNodeRef.current ? "pointer" : "grab";
+  };
 
   useEffect(() => {
     loadGraph(sigmaGraph);
   }, [loadGraph, sigmaGraph]);
 
   useEffect(() => {
-    const container = sigma.getContainer();
-    container.style.cursor = "pointer";
+    syncCursor();
 
     return () => {
-      container.style.cursor = "";
+      sigma.getContainer().style.cursor = "";
     };
   }, [sigma]);
 
   useEffect(() => {
     registerEvents({
+      mousedown: () => {
+        isPointerDownRef.current = true;
+        syncCursor();
+      },
+      mouseup: () => {
+        isPointerDownRef.current = false;
+        syncCursor();
+      },
       enterNode: ({ node }) => {
+        hoveredNodeRef.current = node;
         setHoveredNode(node);
+        syncCursor();
       },
       leaveNode: () => {
+        hoveredNodeRef.current = null;
         setHoveredNode(null);
+        syncCursor();
       },
       clickNode: ({ node, preventSigmaDefault }) => {
         preventSigmaDefault();
@@ -128,11 +148,10 @@ function GraphScene({ data, hoveredNode, setHoveredNode }: GraphSceneProps) {
           router.push(target.href);
         }
       },
-      clickStage: () => {
-        router.push("/graph/");
-      },
       leaveStage: () => {
+        hoveredNodeRef.current = null;
         setHoveredNode(null);
+        syncCursor();
       },
     });
   }, [nodeLookup, registerEvents, router, setHoveredNode]);
@@ -250,9 +269,12 @@ export function MiniGraph({ data }: MiniGraphProps) {
           </SigmaStage>
 
           <div className="pointer-events-none absolute inset-x-3 bottom-3 flex justify-center">
-            <span className="rounded-full border border-[color:var(--border)] bg-white/78 px-3 py-1 text-[0.68rem] font-medium tracking-[0.04em] text-[color:var(--muted)] shadow-[var(--shadow-soft)] backdrop-blur-sm">
-              Click to explore the full graph
-            </span>
+            <Link
+              href="/graph/"
+              className="pointer-events-auto rounded-full border border-[color:var(--border)] bg-white/78 px-3 py-1 text-[0.68rem] font-medium tracking-[0.04em] text-[color:var(--muted)] shadow-[var(--shadow-soft)] backdrop-blur-sm transition hover:border-[color:var(--accent)] hover:text-[color:var(--accent-strong)]"
+            >
+              Open full graph
+            </Link>
           </div>
         </div>
       </div>

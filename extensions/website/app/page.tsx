@@ -36,9 +36,9 @@ export default function HomePage() {
             <h2 className="font-serif text-2xl tracking-[-0.03em]">Recent Updates</h2>
             <span className="text-sm text-[color:var(--muted)]">{recentEntries.length} entries</span>
           </div>
-          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+          <div className="grid gap-x-3 gap-y-5 sm:grid-cols-2 xl:grid-cols-3">
             {recentEntries.map((page, index) => (
-              <EntryCard key={page.slug} entry={page} index={index} />
+              <EntryCard key={page.slug} entry={page} index={index} variant="recent" />
             ))}
           </div>
         </section>

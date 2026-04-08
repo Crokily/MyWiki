@@ -75,7 +75,7 @@ export default async function WikiPage({ params }: WikiPageProps) {
         </nav>
 
         {/* Article Body */}
-        <article className="surface rounded-xl px-5 py-6 sm:px-7 sm:py-8">
+        <article className="surface surface-asymmetric px-5 py-6 sm:px-7 sm:py-8">
           <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: html }} />
         </article>
 

@@ -4,7 +4,7 @@ import Graph from "graphology";
 import { useLoadGraph, useRegisterEvents, useSigma } from "@react-sigma/core";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import type { GraphData, GraphNode } from "@/lib/graph";
 import { resolveGraphPosition } from "@/lib/graph-position";
@@ -32,18 +32,18 @@ const DIRECTORY_COLORS = {
   queries: "#8b6ba0",
 } as const;
 
-const EDGE_COLOR = "rgba(100, 100, 90, 0.30)";
-const HIGHLIGHT_EDGE_COLOR = "rgba(100, 100, 90, 0.50)";
-const DIMMED_EDGE_COLOR = "rgba(100, 100, 90, 0.10)";
 const FOREGROUND_COLOR = "#2c2c24";
+const EDGE_COLOR = hexToRgba(FOREGROUND_COLOR, 0.38);
+const HIGHLIGHT_EDGE_COLOR = hexToRgba("#5d7052", 0.68);
+const DIMMED_EDGE_COLOR = hexToRgba(FOREGROUND_COLOR, 0.18);
 const LOCAL_GRAPH_SETTINGS = {
   autoCenter: true,
   autoRescale: true,
   defaultEdgeColor: EDGE_COLOR,
   defaultNodeColor: DIRECTORY_COLORS.pages,
-  enableCameraPanning: false,
+  enableCameraPanning: true,
   enableCameraRotation: false,
-  enableCameraZooming: false,
+  enableCameraZooming: true,
   enableEdgeEvents: false,
   hideEdgesOnMove: false,
   hideLabelsOnMove: false,
@@ -52,8 +52,8 @@ const LOCAL_GRAPH_SETTINGS = {
   labelRenderedSizeThreshold: 6,
   labelSize: 12,
   labelWeight: "500",
-  maxCameraRatio: 1,
-  minCameraRatio: 1,
+  maxCameraRatio: 2.4,
+  minCameraRatio: 0.45,
   renderEdgeLabels: false,
   renderLabels: true,
   stagePadding: 20,
@@ -102,32 +102,49 @@ function GraphScene({ data, hoveredNode, setHoveredNode }: GraphSceneProps) {
   const registerEvents = useRegisterEvents<GraphNode, SigmaEdgeAttributes>();
   const sigma = useSigma<GraphNode, SigmaEdgeAttributes>();
   const router = useRouter();
+  const hoveredNodeRef = useRef<string | null>(null);
+  const isPointerDownRef = useRef(false);
 
   const sigmaGraph = useMemo(() => createSigmaGraph(data), [data]);
   const nodeLookup = useMemo(() => new Map(data.nodes.map((node) => [node.slug, node] as const)), [data.nodes]);
+
+  const syncCursor = () => {
+    const container = sigma.getContainer();
+
+    container.style.cursor = isPointerDownRef.current ? "grabbing" : hoveredNodeRef.current ? "pointer" : "grab";
+  };
 
   useEffect(() => {
     loadGraph(sigmaGraph);
   }, [loadGraph, sigmaGraph]);
 
   useEffect(() => {
-    const container = sigma.getContainer();
-    container.style.cursor = "default";
+    syncCursor();
 
     return () => {
-      container.style.cursor = "";
+      sigma.getContainer().style.cursor = "";
     };
   }, [sigma]);
 
   useEffect(() => {
     registerEvents({
+      mousedown: () => {
+        isPointerDownRef.current = true;
+        syncCursor();
+      },
+      mouseup: () => {
+        isPointerDownRef.current = false;
+        syncCursor();
+      },
       enterNode: ({ node }) => {
+        hoveredNodeRef.current = node;
         setHoveredNode(node);
-        sigma.getContainer().style.cursor = "pointer";
+        syncCursor();
       },
       leaveNode: () => {
+        hoveredNodeRef.current = null;
         setHoveredNode(null);
-        sigma.getContainer().style.cursor = "default";
+        syncCursor();
       },
       clickNode: ({ node, preventSigmaDefault }) => {
         preventSigmaDefault();
@@ -139,8 +156,9 @@ function GraphScene({ data, hoveredNode, setHoveredNode }: GraphSceneProps) {
         }
       },
       leaveStage: () => {
+        hoveredNodeRef.current = null;
         setHoveredNode(null);
-        sigma.getContainer().style.cursor = "default";
+        syncCursor();
       },
     });
   }, [nodeLookup, registerEvents, router, setHoveredNode, sigma]);

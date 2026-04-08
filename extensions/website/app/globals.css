@@ -81,6 +81,12 @@ summary::-webkit-details-marker {
   backdrop-filter: blur(18px);
 }
 
+.surface-asymmetric {
+  border-radius: 1.5rem;
+  border-top-right-radius: 3rem;
+  border-bottom-left-radius: 2.4rem;
+}
+
 .kicker {
   font-size: 0.72rem;
   font-weight: 700;
