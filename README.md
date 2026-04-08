@@ -2,102 +2,84 @@
 
 **[English](./README.md)** | [中文](./README_ZH.md)
 
-A knowledge-base template maintained by LLM agents.
+A knowledge base template maintained by LLM agents. Instead of RAG, knowledge is compiled into a continuously evolving markdown wiki. Cross-referencing, synthesis, and contradiction checking happen once at ingest time, not on every query.
 
-The design is described in [`llm-wiki.md`](./llm-wiki.md): instead of RAG, knowledge is **compiled** into a continuously evolving markdown wiki. Cross-referencing, synthesis, and contradiction checking are done upfront, not re-derived on every query.
+The design philosophy is described in [`llm-wiki.md`](./llm-wiki.md).
 
----
+## Getting Started
 
-## Quick start
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FCrokily%2FMyWiki&project-name=mywiki&repository-name=mywiki)
 
-1. Fork this repository and clone it locally
-2. Open the project with any AI coding agent (Claude Code, Codex, etc.)
-3. Add content and tell the agent what to ingest or query
-4. The agent reads `AGENTS.md`, understands the wiki structure, and handles summarizing, cross-referencing, filing, and indexing
+Click the button above. It will fork this repository to your GitHub account and deploy it to Vercel automatically. Then clone your fork to your local machine and open it with any AI coding agent (Claude Code, Codex, Pi, OpenClaw, etc.). The agent reads `AGENTS.md` on startup, understands everything, and you can start adding sources and asking questions immediately.
 
-You can then enable extensions as needed:
-- **web-reader** (strongly recommended): lets the agent fetch articles directly from URLs. Just tell your agent "enable the web-reader extension"
-- **qmd**: semantic search across your wiki. Best enabled once you have many pages. Tell your agent "enable the qmd extension"
-- **website**: generates a static site from your wiki. Useful if you don't use Obsidian for browsing. Tell your agent "enable the website extension"
+## How It Works
 
-Enabling any extension is as simple as telling your AI agent to do it.
+You provide sources. The AI agent reads them, extracts key information, and integrates it into the wiki. It handles summarizing, cross-referencing, filing, and indexing. You never write the wiki yourself. The agent writes and maintains all of it.
 
----
+The wiki is a persistent, compounding artifact. Every source you add and every question you ask makes it richer. The cross-references are already there. The contradictions have already been flagged. The synthesis already reflects everything you have read.
 
-## What this is
+### Ingest
 
-- A living knowledge base written by LLMs, read by humans
-- Humans curate sources, ask questions, make judgments; the LLM summarizes, links, and maintains
-- Structure: `raw/` (original sources) -> `sources/` (summaries) -> `pages/` (synthesized entities/concepts/topics) -> `maps/` & `queries/` (high-level synthesis and exploration)
+Drop a file into `raw/` and tell the agent to ingest it. The agent reads the source, discusses takeaways with you, and writes to the wiki after your confirmation. A single ingest may touch 5 to 15 pages.
 
-## What this is not
+You can also give the agent a URL directly if the web-reader extension is enabled.
 
-- Not a chat history dump
-- Not RAG retrieval over raw files
-- Not a manually maintained wiki
+### Query
 
----
+Ask the agent questions: "compare X and Y", "what have I read about Z". The agent searches the wiki, synthesizes an answer, and offers to save valuable results back into the wiki.
 
-## Directory structure
+### Lint
+
+Ask the agent to run a health check. It looks for term inconsistencies, orphan pages, broken links, missing cross-references, and other issues.
+
+## Extensions
+
+Extensions add optional capabilities. Enable any of them by telling your AI agent.
+
+| Extension | What it does |
+|---|---|
+| **web-reader** | Lets the agent fetch articles from URLs. Strongly recommended. |
+| **qmd** | Semantic search across your wiki. Useful once you have many pages. |
+| **website** | Generates a static site from your wiki. Already deployed by Vercel in step 1. |
+
+## Directory Structure
 
 ```
 MyWiki/
-├── AGENTS.md        LLM operational manual (core rules, loaded every session)
-├── taxonomy.md      Controlled vocabulary (type / tags / aliases spec)
-├── index.md         Content directory (LLM-maintained)
-├── log.md           Timeline (append-only)
-├── llm-wiki.md      Design philosophy
-├── README.md        This file
+├── AGENTS.md         LLM operational manual (loaded every session)
+├── taxonomy.md       Controlled vocabulary (type / tags / aliases)
+├── index.md          Content directory (LLM maintained)
+├── log.md            Timeline (append only)
+├── llm-wiki.md       Design philosophy
 │
-├── workflows/       Workflow docs (loaded on demand)
-│   ├── ingest.md    Ingest new sources
-│   ├── query.md     Query the wiki
-│   └── lint.md      Health checks
-├── extensions/      Optional capability extensions (loaded on demand)
-│   ├── qmd/         Hybrid semantic search
-│   ├── web-reader/  Web content extraction
-│   └── website/     Static site generation
+├── workflows/        Workflow docs (loaded on demand)
+│   ├── ingest.md
+│   ├── query.md
+│   └── lint.md
+├── extensions/       Optional capability extensions
+│   ├── qmd/
+│   ├── web-reader/
+│   └── website/
 │
-├── raw/             Immutable original sources
-├── sources/         Per-source summaries (1:1 with raw)
-├── pages/           Wiki pages: entity / concept / topic / tool / book / person / note
-├── maps/            High-level MOC / domain maps
-└── queries/         Backfilled explorations, comparisons, analyses
+├── raw/              Immutable original sources
+├── sources/          Per source summaries
+├── pages/            Wiki pages (entities, concepts, topics, ...)
+├── maps/             High level domain maps
+└── queries/          Explorations, comparisons, analyses
 ```
 
----
+## Use Cases
 
-## Daily usage
+- **Personal knowledge management**: journal entries, articles, podcast notes, self-improvement tracking
+- **Research**: papers, reports, and articles compiled into an evolving synthesis
+- **Reading a book**: chapter by chapter, building out pages for characters, themes, and plot threads
+- **Business**: meeting transcripts, project documents, customer calls turned into a living internal wiki
+- **Anything where knowledge accumulates over time** and you want it organized rather than scattered
 
-### Ingesting a new source
+## For LLM Agents
 
-1. Place a markdown file in `raw/`, named `YYYY-MM-DD-title.md`
-2. Tell the LLM agent: "ingest `raw/2026-04-05-xxx.md`"
-3. The agent reads the source, discusses takeaways with you, and writes to the wiki after your confirmation
-4. A single ingest may touch 5-15 pages; you see updates in real time in Obsidian
-
-### Querying
-
-1. Ask the agent: "compare X and Y", "what have I read about Z"
-2. The agent searches the wiki, synthesizes an answer
-3. If the synthesis is valuable, the agent asks whether to backfill it to `queries/`
-
-### Periodic maintenance
-
-- `lint`: have the agent run a health check (term consistency, orphan pages, broken links, etc.)
-- Edit `taxonomy.md` directly to reorganize categories
-- Edit `AGENTS.md` directly to adjust workflows and repository rules
-
----
-
-## For LLM agents
-
-**Read [`AGENTS.md`](./AGENTS.md) only.** It is the sole file required at session start.
-
-AGENTS.md contains core rules and directs you to workflow docs (`workflows/`) and extension docs (`extensions/`) as needed. Do not preload everything.
-
----
+Read [`AGENTS.md`](./AGENTS.md) only. It is the sole file required at session start.
 
 ## License
 
-This project structure (AGENTS.md, taxonomy.md, workflows/, extensions/, llm-wiki.md) is designed to be open-sourced as a template: clear the content directories (`raw/` `sources/` `pages/` `maps/` `queries/`) and you have a ready-to-use framework for anyone.
+MIT

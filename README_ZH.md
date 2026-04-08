@@ -2,102 +2,84 @@
 
 [English](./README.md) | **[中文](./README_ZH.md)**
 
-一个由 LLM Agent 维护的知识库模板。
+一个由 LLM Agent 维护的知识库模板。不是 RAG，而是把知识编译进一个持续演化的 markdown wiki。交叉引用、综合、矛盾检查在摄入时一次完成，而不是每次查询时重新推导。
 
-设计思想来自 [`llm-wiki.md`](./llm-wiki.md)：不是 RAG，而是把知识**编译**进一个持续演化的 markdown 知识库，交叉引用、综合、矛盾检查都预先做好，而不是每次查询时重新发现。
+设计思想见 [`llm-wiki.md`](./llm-wiki.md)。
 
----
+## 开始使用
 
-## 快速开始
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FCrokily%2FMyWiki&project-name=mywiki&repository-name=mywiki)
 
-1. Fork 本项目到自己的仓库，然后 clone 到本地
-2. 用任意 AI coding agent（Claude Code、Codex 等）打开该项目
-3. 添加内容，并告诉 agent 需要 ingest 或 query 的内容
-4. Agent 会读取 `AGENTS.md`，理解 wiki 结构，处理好一切：摘要、交叉引用、归档、索引
+点击上面的按钮，它会自动将本仓库 fork 到你的 GitHub 账号并部署到 Vercel。然后将你 fork 出来的仓库克隆到本地，用任意 AI coding agent（Claude Code、Codex、Pi、OpenClaw 等）打开即可。Agent 启动时会读取 `AGENTS.md`，自动理解一切，你可以立即开始添加源和提问。
 
-然后你可以按需开启 extension：
-- **web-reader**（强烈建议开启）：让 agent 直接从 URL 获取文章。告诉你的 agent "enable the web-reader extension" 即可
-- **qmd**：wiki 语义搜索。建议等你的 wiki 有很多文件了以后再开。告诉你的 agent "enable the qmd extension"
-- **website**：将 wiki 生成为静态网站。如果你不打算用 Obsidian 浏览，可以直接开。告诉你的 agent "enable the website extension"
+## 工作原理
 
-开启任何 extension 的方法都是直接告诉你的 AI agent，让它帮你操作。
+你提供源材料，AI agent 阅读并提取关键信息，整合到 wiki 中。它负责摘要、交叉引用、归档和索引。你不需要自己写 wiki，agent 负责全部编写和维护。
 
----
+Wiki 是一个持续积累的产物。每添加一个源、每提一个问题，它都会变得更丰富。交叉引用已经建好了，矛盾已经标记了，综合已经反映了你读过的所有内容。
 
-## 这是什么
+### 摄入
 
-- 一个由 LLM 写、人类读的活的知识库
-- 人类负责策划源、提问、判断；LLM 负责摘要、链接、维护
-- 结构为：`raw/`（原始源）-> `sources/`（摘要）-> `pages/`（综合的实体/概念/主题）-> `maps/` & `queries/`（高层综合和探索）
+把文件放进 `raw/`，然后告诉 agent 去摄入它。Agent 会阅读源材料，和你讨论要点，确认后写入 wiki。一次摄入可能涉及 5 到 15 个页面。
 
-## 这不是什么
+如果启用了 web-reader 扩展，你也可以直接给 agent 一个 URL。
 
-- 不是聊天历史的堆积
-- 不是原始文件的 RAG 检索
-- 不是手工维护的 wiki
+### 查询
 
----
+向 agent 提问："对比一下 X 和 Y"，"我读过哪些关于 Z 的内容"。Agent 搜索 wiki，综合答案，并询问是否将有价值的结果保存回 wiki。
+
+### 健康检查
+
+让 agent 做一次健康检查。它会查找术语不一致、孤儿页、断链、缺失的交叉引用等问题。
+
+## 扩展
+
+扩展提供可选功能。告诉你的 AI agent 即可启用。
+
+| 扩展 | 功能 |
+|---|---|
+| **web-reader** | 让 agent 从 URL 获取文章。强烈建议启用。 |
+| **qmd** | Wiki 语义搜索。页面多了以后很有用。 |
+| **website** | 将 wiki 生成为静态网站。第 1 步中 Vercel 已自动部署。 |
 
 ## 目录结构
 
 ```
 MyWiki/
-├── AGENTS.md        LLM 操作手册（核心规则，每次会话加载）
-├── taxonomy.md      受控词表（type / tags / aliases 规范）
-├── index.md         内容目录（LLM 维护）
-├── log.md           时间线（append-only）
-├── llm-wiki.md      设计思想原文
-├── README.md        英文版说明
+├── AGENTS.md         LLM 操作手册（每次会话加载）
+├── taxonomy.md       受控词表（type / tags / aliases）
+├── index.md          内容目录（LLM 维护）
+├── log.md            时间线（仅追加）
+├── llm-wiki.md       设计思想
 │
-├── workflows/       工作流文档（按需加载）
-│   ├── ingest.md    摄入新源
-│   ├── query.md     查询 wiki
-│   └── lint.md      健康检查
-├── extensions/      可选能力扩展（按需加载）
-│   ├── qmd/         混合语义搜索
-│   ├── web-reader/  网页内容提取
-│   └── website/     静态站点生成
+├── workflows/        工作流文档（按需加载）
+│   ├── ingest.md
+│   ├── query.md
+│   └── lint.md
+├── extensions/       可选功能扩展
+│   ├── qmd/
+│   ├── web-reader/
+│   └── website/
 │
-├── raw/             不可变原始源
-├── sources/         每源一页摘要（1:1 同 basename）
-├── pages/           wiki 页面：实体/概念/主题/工具/书/人物/笔记
-├── maps/            高层 MOC / 领域地图
-└── queries/         回填的探索、对比、分析
+├── raw/              不可变原始源
+├── sources/          每源一页摘要
+├── pages/            Wiki 页面（实体、概念、主题……）
+├── maps/             高层领域地图
+└── queries/          探索、对比、分析
 ```
 
----
+## 使用场景
 
-## 如何使用（日常）
-
-### 加入一个新源
-
-1. 把 md 文件放进 `raw/`，命名 `YYYY-MM-DD-title.md`
-2. 告诉 LLM agent："ingest `raw/2026-04-05-xxx.md`"
-3. Agent 会先读源，和你讨论 takeaways，等你确认后再写 wiki
-4. 一次 ingest 可能触及 5-15 个 pages，你在 Obsidian 里实时看到更新
-
-### 查询
-
-1. 直接问 agent："对比一下 X 和 Y"、"我读过哪些讲 Z 的东西"
-2. Agent 用搜索引擎查找，综合答案
-3. 如果是有价值的新综合，agent 会问你要不要回填到 `queries/`
-
-### 定期维护
-
-- `lint`：让 agent 做一次健康检查（术语一致性、孤儿页、断链等）
-- 直接改 `taxonomy.md` 来重组分类
-- 直接改 `AGENTS.md` 来调整工作流和仓库规则
-
----
+- **个人知识管理**：日记、文章、播客笔记、自我提升追踪
+- **研究**：论文、报告、文章编译成不断演化的综合
+- **读书**：逐章构建角色、主题、情节线索的页面
+- **商业**：会议记录、项目文档、客户通话转化为活的内部 wiki
+- **任何知识随时间积累的场景**，你希望它被组织起来而非散落各处
 
 ## 给 LLM Agent 的入口
 
-**只需读 [`AGENTS.md`](./AGENTS.md)**。它是唯一需要在会话开始时加载的文件。
-
-AGENTS.md 包含核心规则，并会在需要时指引你读取工作流文档（`workflows/`) 和扩展文档（`extensions/`）。不要预读所有文件。
-
----
+只需读取 [`AGENTS.md`](./AGENTS.md)。它是唯一需要在会话开始时加载的文件。
 
 ## License
 
-本项目结构（AGENTS.md、taxonomy.md、workflows/、extensions/、llm-wiki.md）设计为可开源模板：把 `raw/` `sources/` `pages/` `maps/` `queries/` 里的内容清空，就是一份可供他人直接使用的框架。
+MIT
