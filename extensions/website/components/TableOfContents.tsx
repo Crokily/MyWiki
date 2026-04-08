@@ -37,15 +37,15 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
 
   return (
     <nav aria-label="Table of contents">
-      <p className="text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">Contents</p>
-      <ul className="mt-3 space-y-1.5">
+      <p className="text-sm font-semibold uppercase tracking-[0.12em] text-[color:var(--foreground)]">Contents</p>
+      <ul className="mt-3 space-y-1">
         {headings.map((heading) => {
           const isActive = activeId === heading.id;
           return (
             <li key={heading.id}>
               <a
                 href={`#${heading.id}`}
-                className={`block text-sm leading-snug transition ${heading.level === 3 ? "pl-4" : ""} ${isActive ? "font-medium text-[color:var(--accent-strong)]" : "text-[color:var(--muted)] hover:text-[color:var(--foreground)]"}`}
+                className={`block text-xs leading-snug transition ${heading.level === 3 ? "pl-4" : ""} ${isActive ? "font-medium text-[color:var(--accent-strong)]" : "text-[color:var(--muted)] hover:text-[color:var(--foreground)]"}`}
               >
                 {heading.text}
               </a>

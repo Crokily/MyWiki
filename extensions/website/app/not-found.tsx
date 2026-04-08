@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <section className="surface rounded-[2.5rem] px-5 py-8 sm:px-7">
+    <section className="surface rounded-xl px-5 py-8 sm:px-7">
       <p className="text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">404</p>
       <h1 className="mt-4 font-serif text-5xl leading-none tracking-[-0.05em]">Page Not Found</h1>
       <p className="mt-4 max-w-2xl text-[color:var(--muted)]">

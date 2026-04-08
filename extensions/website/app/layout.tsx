@@ -34,6 +34,11 @@ export const metadata: Metadata = {
     template: "%s | MyWiki",
   },
   description: "A personal knowledge base incrementally maintained by LLM agents",
+  icons: {
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
+    apple: "/favicon.svg",
+  },
 };
 
 export const viewport: Viewport = {
@@ -59,7 +64,7 @@ export default function RootLayout({
       <body>
         <div className="relative isolate min-h-screen px-4 py-4 sm:px-6">
           <SiteHeader entries={searchEntries} />
-          <main className="mx-auto mt-6 w-full max-w-7xl pb-10">{children}</main>
+          <main className="mx-auto mt-6 w-full max-w-[96rem] pb-10">{children}</main>
         </div>
       </body>
     </html>

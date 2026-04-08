@@ -54,7 +54,7 @@ export default async function TagPage({ params }: TagPageProps) {
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_16rem] xl:grid-cols-[minmax(0,1fr)_18rem]">
       {/* ── Main Column ── */}
       <div className="space-y-6">
-        <section className="surface overflow-hidden rounded-[2.5rem] px-5 py-6 sm:px-7 sm:py-8">
+        <section className="surface overflow-hidden rounded-xl px-5 py-6 sm:px-7 sm:py-8">
           <div className="flex flex-wrap items-center gap-2 text-sm">
             <Link href="/" className="text-[color:var(--muted)] transition hover:text-[color:var(--accent-strong)]">
               Home
@@ -78,8 +78,8 @@ export default async function TagPage({ params }: TagPageProps) {
       {/* ── Sidebar ── */}
       <aside className="hidden lg:block">
         <div className="sticky top-24 space-y-5">
-          <section className="surface rounded-[2rem] px-4 py-5">
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">All Tags</p>
+          <section className="surface rounded-xl px-4 py-5">
+            <p className="text-sm font-semibold uppercase tracking-[0.12em] text-[color:var(--foreground)]">All Tags</p>
             <div className="mt-4 space-y-2">
               {allTags.map((t) => (
                 <Link
