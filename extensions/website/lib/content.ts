@@ -162,8 +162,109 @@ function loadEntries(): WikiEntry[] {
     }
   }
 
+  if (entries.length === 0) {
+    entries.push({
+      slug: "getting-started",
+      directory: "pages",
+      href: "/getting-started",
+      title: "Getting Started",
+      body: GETTING_STARTED_BODY,
+      excerpt: "Welcome to MyWiki — your AI-maintained knowledge base. Learn how to add your first source and start building your wiki.",
+      tags: ["getting-started"],
+      links: [],
+      frontmatter: { title: "Getting Started", type: "guide" },
+      sortDate: new Date().toISOString().slice(0, 10),
+      classification: "guide",
+    });
+  }
+
   return entries;
 }
+
+const GETTING_STARTED_BODY = `
+## Welcome
+
+MyWiki is a knowledge base maintained by LLM agents. You provide sources — the AI summarizes, cross-references, and organizes them into a structured wiki.
+
+This page will disappear automatically once you add your first piece of content.
+
+---
+
+## Add your first source
+
+There are two ways to get content into your wiki:
+
+### Option A: Drop a file into \`raw/\`
+
+Place any file (markdown, PDF, text, etc.) into the \`raw/\` directory:
+
+\`\`\`
+raw/2026-04-05-my-first-article.md
+\`\`\`
+
+Then tell your AI agent:
+
+> "Ingest \`raw/2026-04-05-my-first-article.md\`"
+
+### Option B: Send a URL or paste text directly
+
+Just share it with the AI in conversation:
+
+> "Ingest this article: https://example.com/some-article"
+
+> "Ingest this: (paste your text here)"
+
+The agent will save it to \`raw/\`, then proceed with ingestion.
+
+---
+
+## What happens next
+
+1. The agent reads your source in full
+2. It presents 3–7 key takeaways for you to review
+3. After your confirmation, it writes structured summaries and wiki pages
+4. Pages are automatically cross-referenced with \`[[wikilinks]]\`
+
+A single source can touch 5–15 wiki pages — creating new ones and updating existing ones.
+
+---
+
+## Directory structure
+
+| Directory | What goes there |
+|---|---|
+| \`raw/\` | Original sources (immutable, any format) |
+| \`sources/\` | Per-source summaries (auto-generated) |
+| \`pages/\` | Wiki pages — concepts, entities, topics |
+| \`maps/\` | High-level overview maps |
+| \`queries/\` | Explorations, comparisons, analyses |
+
+---
+
+## Querying your wiki
+
+Once you have content, ask your agent anything:
+
+> "What have I read about X?"
+
+> "Compare A and B"
+
+> "Summarize everything tagged with Y"
+
+The agent searches the wiki and synthesizes an answer. If it's valuable, it can be saved to \`queries/\`.
+
+---
+
+## Extensions
+
+| Extension | Purpose |
+|---|---|
+| **web-reader** | Lets the agent fetch articles from URLs directly |
+| **qmd** | Semantic search across your wiki |
+| **website** | The static site you're looking at right now |
+
+Enable any extension by telling your AI agent, e.g. "enable the web-reader extension".
+`.trim();
 
 export function getAllPages(): WikiEntry[] {
   if (!cachedEntries) {
