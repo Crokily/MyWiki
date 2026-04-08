@@ -1,11 +1,15 @@
 import Link from "next/link";
 
 import { EntryCard } from "@/components/EntryCard";
+import { MiniGraph } from "@/components/MiniGraph";
 import { getAllTags, getDirectoryCounts, getRecentPages, tagToHref } from "@/lib/content";
+import { getGraphData } from "@/lib/graph";
 import { DIRECTORY_LABELS } from "@/lib/site";
 
 export default function HomePage() {
   const counts = getDirectoryCounts();
+  const graphData = getGraphData();
+  const hasGraph = graphData.nodes.length > 0;
   const tags = getAllTags();
   const recentEntries = getRecentPages(18).map((page) => ({
     slug: page.slug,
@@ -78,6 +82,15 @@ export default function HomePage() {
             </div>
           </section>
 
+          {hasGraph && (
+            <section className="surface rounded-[2rem] px-4 py-5">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">Knowledge Graph</p>
+              <div className="mt-4">
+                <MiniGraph data={graphData} />
+              </div>
+            </section>
+          )}
+
           {/* Tags */}
           {tags.length > 0 && (
             <section className="surface rounded-[2rem] px-4 py-5">
@@ -101,6 +114,15 @@ export default function HomePage() {
 
       {/* ── Mobile-only sidebar content ── */}
       <div className="space-y-5 lg:hidden">
+        {hasGraph && (
+          <section className="surface rounded-[2rem] px-5 py-5">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">Knowledge Graph</p>
+            <div className="mt-4">
+              <MiniGraph data={graphData} />
+            </div>
+          </section>
+        )}
+
         {tags.length > 0 && (
           <section className="surface rounded-[2rem] px-5 py-5">
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--muted)]">Tags</p>

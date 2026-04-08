@@ -72,6 +72,12 @@ export function SiteHeader({ entries }: SiteHeaderProps) {
           >
             Home
           </Link>
+          <Link
+            href="/graph/"
+            className="rounded-full border border-[color:var(--border)] bg-[color:var(--surface-card)] px-4 py-2 text-sm font-medium transition hover:border-[color:var(--accent)] hover:text-[color:var(--accent-strong)]"
+          >
+            Graph
+          </Link>
         </nav>
       </div>
     </header>
